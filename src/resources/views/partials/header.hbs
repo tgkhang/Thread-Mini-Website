@@ -1,0 +1,51 @@
+<header>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top shadow-sm py-2">
+        <div class="container">
+            <a class="navbar-brand mx-auto fw-bold fs-5 text-dark text-center" href="/">
+                <i class="bi bi-threads fs-3"></i> Threads
+            </a>
+            {{#if isLoggedIn}}
+            <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapsibleNavId"
+                aria-controls="collapsibleNavId"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+            >
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Navbar Menu -->
+            <div class="collapse navbar-collapse justify-content-end" id="collapsibleNavId">
+                <ul class="navbar-nav me-3 mt-2 mt-lg-0">
+                    <li class="nav-item dropdown">
+                        <a
+                            class="nav-link dropdown-toggle text-dark fs-6"
+                            href="#"
+                            id="dropdownId"
+                            data-bs-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                        >
+                            Option
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownId">
+                            <form id="logoutForm" action="/logout" method="POST" style="display: none;"></form>
+                            <a class="dropdown-item fs-6" href="#" onclick="document.getElementById('logoutForm').submit(); return false;">Log Out</a>
+                            <a class="dropdown-item fs-6" href="#">Settings</a>
+                        </div>
+                    </li>
+                </ul>
+                <!-- Instagram Icon Button -->
+                <button class="btn btn-outline-light fs-6 border-0 text-dark">
+                    <i class="bi bi-instagram"></i>
+                </button>
+            </div>
+            
+            {{/if}}
+        </div>
+    </nav>
+</header>

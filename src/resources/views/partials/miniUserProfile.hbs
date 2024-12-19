@@ -1,0 +1,42 @@
+<li
+  class="list-group-item d-flex justify-content-between align-items-center shadow-sm rounded mb-2 p-3 hover-card"
+>
+  <div class="d-flex align-items-center">
+    <img
+      src="{{imagePath}}"
+      alt="Avatar"
+      class="rounded-circle me-3"
+      style="width: 40px; height: 40px; object-fit: cover; cursor: pointer;"
+      onclick="location.href='/{{userName}}'"
+    />
+    <div>
+      <strong>{{firstName}} {{lastName}}</strong><br />
+      <small>{{userName}} </small>
+    </div>
+  </div>
+  <div>
+    <a
+      href="/{{userName}}"
+      class="btn btn-outline-secondary btn-sm me-2"
+      onclick="event.stopPropagation();"
+    >
+      View
+    </a>
+    <a
+      role="button" href="#"
+      class="btn btn-outline-secondary btn-sm followButton"
+      id="{{userName}}"
+      onclick="follow('{{userName}}',{{id}})"
+    >
+      {{#if (arrayInclude followingIds id)}}
+        Unfollow
+      {{else}}
+        Follow
+      {{/if}}
+
+    </a>
+
+  </div>
+</li>
+
+<script src="/js/22127181.js"></script>

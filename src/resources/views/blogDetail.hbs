@@ -1,0 +1,111 @@
+{{>header}}
+
+<main class="col-md-5 d-flex flex-column align-items-center pt-5 mt-5 container">
+    <div class="w-100">
+        <!-- Blog Post -->
+        {{#with blog}}
+            {{>blog}}
+        {{/with}}
+        
+        <!-- Comment Section -->
+        <div class="card shadow-sm border-0 bg-light-grey">
+            <div class="card-body">
+                <h6 class="fw-bold">Comments</h6>
+                <!-- Comment Input -->
+                <form action="/comment/{{requestedPage}}/{{blog.id}}" method="post">
+                    <div class="d-flex align-items-start mb-3">
+                        {{#with mainUserInfo}}
+                        <img
+                            src="{{imagePath}}"
+                            alt="User Avatar"
+                            class="rounded-circle me-3"
+                            width="50" 
+                            height="50"
+                        />
+                        {{/with}}
+                        <textarea
+                            class="form-control border-1 border-secondary rounded shadow-sm"
+                            rows="3"
+                            placeholder="Write your comment..."
+                            name="text"
+                        ></textarea>
+                    </div>
+                    <div class="text-end">
+                        <button class="btn btn-outline-secondary shadow-sm btn-sm rounded-pill"
+                        type="sumbmit">
+                            Post Comment
+                        </button>
+                    </div>
+                </form>
+
+                
+                <!-- existing Comments -->
+                <div class="comments-section">
+                {{#each comments}}
+                <div class="comment-box d-flex mb-4 p-3 bg-light rounded shadow-sm">
+                    <!-- User Avatar -->
+                    <div class="me-3">
+                        <img
+                            src="{{userImage}}"
+                            alt="Avatar"
+                            class="rounded-circle"
+                            style="width: 50px; height: 50px; object-fit: cover;"
+                            onclick="location.href='/{{userName}}'"
+                        />
+                    </div>
+
+                    <!-- Comment Content -->
+                    <div class="flex-grow-1">
+                        <!-- User Info -->
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div onclick="location.href='/{{userName}}'" style="cursor: pointer;">
+                                <h6 class="mb-0 fw-bold">{{userName}}</h6>
+                                <small class="text-muted">{{timeExpectation createdAt}}</small>
+                            </div>
+                        </div>
+
+                        <!-- Comment Text -->
+                        <p class="mb-0">{{text}}</p>
+                    </div>
+                </div>
+                {{/each}}
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</main>
+
+{{>navBar}}
+
+
+<style>
+    .btn-outline-secondary {
+        border-radius: 50px;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-outline-secondary:hover {
+        background-color: #6c757d;
+        color: white;
+        transform: scale(1.05);
+    }
+
+    
+    .comment-box {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .comment-box:hover {
+        transform: scale(1.02);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+   
+    textarea:focus {
+        border-color: #6c757d;
+        outline: none;
+        box-shadow: 0 0 5px rgba(108, 117, 125, 0.5);
+    }
+</style>

@@ -1,0 +1,40 @@
+{
+  "name": "hcmus-csc13008-web-thread-final",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon --inspect src/app.js",
+    "watch": "sass --watch src/resources/scss/app.scss:src/public/css/app.css"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "bootstrap-icons": "^1.11.3",
+    "cloudinary": "^2.5.1",
+    "connect-flash": "^0.1.1",
+    "connect-redis": "^8.0.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "express-handlebars": "^8.0.1",
+    "express-handlebars-paginate": "^1.0.3",
+    "express-session": "^1.18.1",
+    "express-validator": "^7.2.0",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "1.4.5-lts.1",
+    "node-mailjet": "^6.0.6",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0",
+    "pg": "^8.13.1",
+    "pg-hstore": "^2.3.4",
+    "redis": "^4.7.0",
+    "sass": "^1.81.0",
+    "sequelize": "^6.37.5"
+  },
+  "devDependencies": {
+    "morgan": "^1.10.0",
+    "nodemon": "^3.1.7"
+  }
+}

@@ -1,0 +1,142 @@
+{{>header}}
+<main class="d-flex flex-column align-items-center pt-5 mt-5">
+    <p class="fs-1 mt-5">Sign Up</p>
+    <i class="bi bi-threads display-3 mt-3 mb-4"></i>
+    
+    {{#if done}}
+    <p class="fs-4 text-center text-muted mt-3 mb-4">Register Success. You can now <a href="/login">log in</a>.</p>
+    <div class="mb-4">
+        <i class="bi bi-check-circle-fill display-4 text-success"></i>
+    </div>
+
+    {{else if expired}}
+    <p class="fs-4 text-center text-warning mt-3 mb-4">Your reset link has expired. Please request a new one.</p>
+    <div class="mb-4">
+        <i class="bi bi-exclamation-triangle-fill display-4 text-warning"></i>
+    </div>
+    <a href="/" class="btn btn-primary btn-lg px-4 py-2 mt-3">Request New Link</a>
+
+    {{else}}
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-10 col-md-8 col-lg-6">
+                <form action="/register" method="post" id="formRegister">
+                    <!-- Email -->
+                    <div class="form-floating mb-3">
+                        <input
+                            type="email"
+                            class="form-control"
+                            id="email"
+                            name="email"
+                            placeholder="Enter your email address"
+                            value="{{email}}"
+                            readonly
+                        />
+                        <label for="email">Email</label>
+                    </div>
+                    <!-- Username -->
+                    <div class="form-floating mb-3">
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="username"
+                            name="username"
+                            placeholder="Enter your username"
+                            readonly
+                            value="{{userName}}"
+                        />
+                        <label for="username">Username</label>
+                    </div>
+                    <!-- First Name -->
+                    <div class="form-floating mb-3">
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="firstName"
+                            name="firstName"
+                            placeholder="First Name"
+                            required
+                        />
+                        <label for="firstName">First Name</label>
+                    </div>
+
+                    <!-- Last Name -->
+                    <div class="form-floating mb-3">
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="lastName"
+                            name="lastName"
+                            placeholder="Last Name"
+                            required
+                        />
+                        <label for="lastName">Last Name</label>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="form-floating mb-3">
+                        <input
+                            type="password"
+                            class="form-control"
+                            id="password"
+                            name="password"
+                            placeholder="Enter your password"
+                            onchange="checkPasswordConfirm('formRegister')"
+                            required
+                        />
+                        <label for="password">Password</label>
+                    </div>
+
+                    <!-- Confirm Password -->
+                    <div class="form-floating mb-3">
+                        <input
+                            type="password"
+                            class="form-control"
+                            id="confirmPassword"
+                            name="confirmPassword"
+                            placeholder="Confirm your password"
+                            onkeyup="checkPasswordConfirm('formRegister')"
+                            required
+                        />
+                        <label for="confirmPassword">Confirm Password</label>
+                    </div>
+
+                    <!-- Terms and Conditions Checkbox -->
+                    <div class="mb-3 form-check">
+                        <input
+                            type="checkbox"
+                            class="form-check-input"
+                            id="terms"
+                            required
+                        />
+                        <label class="form-check-label" for="terms">
+                            I agree to the <a href="/terms" target="_blank">Terms and Conditions</a>
+                        </label>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Sign Up</button>
+                    </div>
+                    <!-- Register Message -->
+                    {{#if registerMessage}}
+                    <div
+                        class="alert alert-warning mt-3 w-100 text-break"
+                        style="max-height: 150px; overflow-y: auto;"
+                    >
+                        {{{registerMessage}}}
+                    </div>
+                    {{/if}}
+                    <input type="hidden" name="reqUrl" value="{{reqUrl}}">
+                </form>
+
+                <!-- Login Link -->
+                <div class="mt-4 text-center">
+                    <p>Already have an account? <a href="/login">Login here</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/if}}
+</main>
