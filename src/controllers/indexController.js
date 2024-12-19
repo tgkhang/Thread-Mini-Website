@@ -23,7 +23,7 @@ controller.showHomepage = async (req, res) => {
       "createdAt",
       [
         sequelize.literal(
-          `(SELECT COUNT(*) FROM Likes WHERE Likes.threadId = Thread.id)`
+          `(SELECT COUNT(*) FROM "Likes" WHERE "Likes"."threadId" = "Thread"."id")`
         ),
         "totalLikes",
       ],
@@ -79,6 +79,12 @@ controller.showHomepage = async (req, res) => {
       ["imagePath", "threadImage"],
       "userId",
       "createdAt",
+      [
+        sequelize.literal(
+          `(SELECT COUNT(*) FROM "Likes" WHERE "Likes"."threadId" = "Thread"."id")`
+        ),
+        "totalLikes",
+      ],
     ],
     where: {
       userId: {
@@ -105,6 +111,7 @@ controller.showHomepage = async (req, res) => {
     createdAt: blog.createdAt,
     userName: blog["user.userName"],
     userImage: blog["user.imagePath"],
+    totalLikes: blog.totalLikes,
   }));
   res.locals.followingBlogs = followTabBlogs;
   //console.log(followingBlogs);
@@ -180,6 +187,7 @@ controller.showProfilepage = async (req, res) => {
   //console.log(userInfo);
   res.locals.userInfo = userInfo;
 
+
   //own thread
   const blogs = await models.Thread.findAll({
     attributes: [
@@ -188,6 +196,12 @@ controller.showProfilepage = async (req, res) => {
       ["imagePath", "threadImage"],
       "userId",
       "createdAt",
+      [
+        sequelize.literal(
+          `(SELECT COUNT(*) FROM "Likes" WHERE "Likes"."threadId" = "Thread"."id")`
+        ),
+        "totalLikes",
+      ],
     ],
     where: {
       userId: ID,
@@ -214,6 +228,7 @@ controller.showProfilepage = async (req, res) => {
     createdAt: blog.createdAt,
     userName: blog["user.userName"],
     userImage: blog["user.imagePath"],
+    totalLikes: blog.totalLikes,
   }));
   res.locals.blogs = processedBlogs;
 
@@ -657,6 +672,12 @@ controller.showPage = async (req, res) => {
             ["imagePath", "threadImage"],
             "userId",
             "createdAt",
+            [
+              sequelize.literal(
+                `(SELECT COUNT(*) FROM "Likes" WHERE "Likes"."threadId" = "Thread"."id")`
+              ),
+              "totalLikes",
+            ],
           ],
           where: { userId: userInfo.id },
           include: [
@@ -678,6 +699,7 @@ controller.showPage = async (req, res) => {
           createdAt: blog.createdAt,
           userName: blog["user.userName"],
           userImage: blog["user.imagePath"],
+          totalLikes: blog.totalLikes,
         }));
         res.locals.blogs = processedBlogs;
 

@@ -36,6 +36,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Thread',
+    tableName: 'Threads'
   });
   return Thread;
 };
