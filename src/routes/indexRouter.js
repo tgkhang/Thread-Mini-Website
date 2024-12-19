@@ -31,6 +31,8 @@ router.post('/updateProfile',
 router.delete("/unfollow",controller.unfollowUser);
 router.post('/follow',controller.followUser);
 
+router.post('/likeThread',controller.likeThread);
+
 router.get('/:page/:thread?', controller.showPage);
 
 router.get('/', (req, res) => {

@@ -60,3 +60,38 @@ async function follow(userName,id) {
     }
   }
   
+
+
+
+  async function likeThread(threadId, userId) {
+    try {
+    
+      const likeButton = document.getElementById(threadId);
+      const isLiked = likeButton.classList.contains("liked");
+ 
+      const action = isLiked ? "unlike" : "like";
+  
+     
+      const res = await fetch(`/likeThread?threadId=${threadId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId, action }),
+      });
+  
+      if (res.ok) {
+        // Parse the JSON response
+        const data = await res.json();
+  
+        // Update the like button and count
+        likeButton.innerHTML = `<i class="bi bi-heart${!isLiked ? '-fill' : ''} me-1"></i>${data.totalLikes}`;
+        likeButton.classList.toggle("liked", !isLiked);
+    } else {
+        console.error("Failed to toggle like");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
+  

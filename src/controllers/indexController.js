@@ -27,6 +27,12 @@ controller.showHomepage = async (req, res) => {
         ),
         "totalLikes",
       ],
+      [
+        sequelize.literal(
+          `(SELECT COUNT(*) FROM "Likes" WHERE "Likes"."threadId" = "Thread"."id" AND "Likes"."userId" = ${ID})`
+        ),
+        "status",
+      ],
     ],
     where: {
       userId: {
@@ -44,7 +50,7 @@ controller.showHomepage = async (req, res) => {
     limit: 10,
     raw: true,
   });
-
+  
   const processedBlogs = blogs.map((blog) => ({
     id: blog.id,
     text: blog.text,
@@ -54,6 +60,7 @@ controller.showHomepage = async (req, res) => {
     userName: blog["user.userName"],
     userImage: blog["user.imagePath"],
     totalLikes: blog.totalLikes,
+    liked: blog.status > 0, // Convert to boolean: true if liked, false otherwise
   }));
   res.locals.blogs = processedBlogs;
 
@@ -85,6 +92,12 @@ controller.showHomepage = async (req, res) => {
         ),
         "totalLikes",
       ],
+      [
+        sequelize.literal(
+          `(SELECT COUNT(*) FROM "Likes" WHERE "Likes"."threadId" = "Thread"."id" AND "Likes"."userId" = ${ID})`
+        ),
+        "status",
+      ],
     ],
     where: {
       userId: {
@@ -112,6 +125,7 @@ controller.showHomepage = async (req, res) => {
     userName: blog["user.userName"],
     userImage: blog["user.imagePath"],
     totalLikes: blog.totalLikes,
+    liked: blog.status > 0,
   }));
   res.locals.followingBlogs = followTabBlogs;
   //console.log(followingBlogs);
@@ -202,6 +216,12 @@ controller.showProfilepage = async (req, res) => {
         ),
         "totalLikes",
       ],
+      [
+        sequelize.literal(
+          `(SELECT COUNT(*) FROM "Likes" WHERE "Likes"."threadId" = "Thread"."id" AND "Likes"."userId" = ${ID})`
+        ),
+        "status",
+      ],
     ],
     where: {
       userId: ID,
@@ -229,6 +249,7 @@ controller.showProfilepage = async (req, res) => {
     userName: blog["user.userName"],
     userImage: blog["user.imagePath"],
     totalLikes: blog.totalLikes,
+    liked: blog.status > 0,
   }));
   res.locals.blogs = processedBlogs;
 
@@ -548,20 +569,49 @@ controller.createComment= async (req,res)=>{
   
 }
 
+controller.likeThread = async (req, res) => {
+  const { threadId } = req.query; 
+  const { action } = req.body; 
+  const currentID = req.user.id;
+  console.log("like thread"+ action.toString());
+  console.log(threadId);
+  console.log(action.toString());
+  try {
+    if (action === "like") {
+      await models.Like.create({ threadId, userId: currentID });
+    } else if (action === "unlike") {
+     
+      const existingLike = await models.Like.findOne({
+        where: { threadId, userId: currentID },
+      });
+      if (existingLike) {
+        await existingLike.destroy();
+      }
+    } else {
+      return res.status(400).json({ error: "Invalid action" });
+    }
+
+
+    const totalLikes = await models.Like.count({ where: { threadId } });
+
+    res.json({ totalLikes });
+  } catch (error) {
+    console.error("Error handling like/unlike action:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+
 //another page
 controller.showPage = async (req, res) => {
   let currentID = req.user.id;
   res.locals.currentID = currentID;
 
-  const mainUserInfo = await models.User.findOne({
+  res.locals.mainUserInfo = await models.User.findOne({
     attributes: ["id", "firstName", "lastName", "bio", "userName", "imagePath"],
-    where: {
-      id: currentID,
-    },
+    where: { id: currentID },
     raw: true,
   });
-  res.locals.mainUserInfo = mainUserInfo;
- 
 
   const renderablePages = {
     static: ["home", "search", "createThread"],
@@ -569,44 +619,39 @@ controller.showPage = async (req, res) => {
   };
 
   const requestedPage = req.params.page;
-  const threadId = req.params.thread || null;
-  res.locals.requestedPage= requestedPage;
+  const blogId = req.params.thread || null;
+  res.locals.requestedPage = requestedPage;
 
-  console.log("Requested Page:", requestedPage);
-  console.log("Thread ID:", threadId);
-
-  // Check if the page is not a static or dynamic page
-  if (
-    !renderablePages.static.includes(requestedPage) &&
-    !renderablePages.dynamic.includes(requestedPage)
-  ) {
-    // Fetch user information for the requested profile
+  // If the requested page is not static or dynamic
+  if (!renderablePages.static.includes(requestedPage) && !renderablePages.dynamic.includes(requestedPage)) {
     const userInfo = await models.User.findOne({
       where: { userName: requestedPage },
-      attributes: [
-        "id",
-        "firstName",
-        "lastName",
-        "bio",
-        "userName",
-        "imagePath",
-      ],
+      attributes: ["id", "firstName", "lastName", "bio", "userName", "imagePath"],
       raw: true,
     });
 
     if (userInfo) {
-      res.locals.requestID = userInfo.id; // Requested profile's ID
-      if (threadId) {
-        // Handle thread-specific rendering
-        const thread = await models.Thread.findOne({
+      res.locals.requestID = userInfo.id;
+
+      if (blogId) {
+        // Fetch specific blog details
+        const blog = await models.Thread.findOne({
           attributes: [
             "id",
             "text",
             ["imagePath", "threadImage"],
             "userId",
             "createdAt",
+            [
+              sequelize.literal(`(SELECT COUNT(*) FROM "Likes" WHERE "Likes"."threadId" = "Thread"."id")`),
+              "totalLikes",
+            ],
+            [
+              sequelize.literal(`(SELECT COUNT(*) FROM "Likes" WHERE "Likes"."threadId" = "Thread"."id" AND "Likes"."userId" = ${currentID})`),
+              "status",
+            ],
           ],
-          where: { id: threadId },
+          where: { id: blogId },
           include: [
             {
               model: models.User,
@@ -617,25 +662,23 @@ controller.showPage = async (req, res) => {
           raw: true,
         });
 
-        if (!thread) {
-          return res.status(404).send("Thread not found");
-        }
+        if (!blog) return res.status(404).send("Blog not found");
 
-        const processedThread = {
-          id: thread.id,
-          text: thread.text,
-          threadImage: thread.threadImage,
-          userId: thread.userId,
-          createdAt: thread.createdAt,
-          userName: thread["user.userName"],
-          userImage: thread["user.imagePath"],
+        res.locals.blog = {
+          id: blog.id,
+          text: blog.text,
+          threadImage: blog.threadImage,
+          userId: blog.userId,
+          createdAt: blog.createdAt,
+          userName: blog["user.userName"],
+          userImage: blog["user.imagePath"],
+          totalLikes: blog.totalLikes,
+          liked: blog.status > 0,
         };
 
-        res.locals.blog = processedThread;
-
-        const comments = await models.Comment.findAll({
+        res.locals.comments = (await models.Comment.findAll({
           attributes: ["id", "text", "userId", "threadId", "createdAt"],
-          where: { threadId },
+          where: { threadId: blogId },
           include: [
             {
               model: models.User,
@@ -645,9 +688,7 @@ controller.showPage = async (req, res) => {
           ],
           order: [["createdAt", "DESC"]],
           raw: true,
-        });
-
-        const processedComments = comments.map((comment) => ({
+        })).map((comment) => ({
           id: comment.id,
           text: comment.text,
           userId: comment.userId,
@@ -656,16 +697,13 @@ controller.showPage = async (req, res) => {
           userImage: comment["user.imagePath"],
         }));
 
-        res.locals.comments = processedComments;
-
         res.render("blogDetail");
         return;
       } else {
-        // Handle profile rendering
+        // Fetch user profile and blogs
         res.locals.userInfo = userInfo;
 
-        // Fetch the user's own threads
-        const blogs = await models.Thread.findAll({
+        res.locals.blogs = (await models.Thread.findAll({
           attributes: [
             "id",
             "text",
@@ -673,10 +711,12 @@ controller.showPage = async (req, res) => {
             "userId",
             "createdAt",
             [
-              sequelize.literal(
-                `(SELECT COUNT(*) FROM "Likes" WHERE "Likes"."threadId" = "Thread"."id")`
-              ),
+              sequelize.literal(`(SELECT COUNT(*) FROM "Likes" WHERE "Likes"."threadId" = "Thread"."id")`),
               "totalLikes",
+            ],
+            [
+              sequelize.literal(`(SELECT COUNT(*) FROM "Likes" WHERE "Likes"."threadId" = "Thread"."id" AND "Likes"."userId" = ${currentID})`),
+              "status",
             ],
           ],
           where: { userId: userInfo.id },
@@ -689,9 +729,7 @@ controller.showPage = async (req, res) => {
           ],
           order: [["createdAt", "DESC"]],
           raw: true,
-        });
-
-        const processedBlogs = blogs.map((blog) => ({
+        })).map((blog) => ({
           id: blog.id,
           text: blog.text,
           threadImage: blog.threadImage,
@@ -700,50 +738,37 @@ controller.showPage = async (req, res) => {
           userName: blog["user.userName"],
           userImage: blog["user.imagePath"],
           totalLikes: blog.totalLikes,
+          liked: blog.status > 0,
         }));
-        res.locals.blogs = processedBlogs;
 
-        // Fetch users the current user is following
-        const following = await models.Follow.findAll({
+        const followingIds = (await models.Follow.findAll({
           attributes: ["followingId"],
           where: { followerId: currentID },
           raw: true,
-        });
+        })).map((f) => f.followingId);
 
-        const followingIds = following.map((f) => f.followingId);
-
-        const followingList = await models.User.findAll({
+        res.locals.followingList = await models.User.findAll({
           attributes: ["id", "firstName", "lastName", "userName", "imagePath"],
           where: {
-            id: { [Op.in]: followingIds },
-            id: { [Op.ne]: currentID },
+            id: { [Op.in]: followingIds, [Op.ne]: currentID },
           },
           raw: true,
         });
 
-        res.locals.followingList = followingList;
-
-        // Fetch users following the current user
-        const followers = await models.Follow.findAll({
+        const followerIds = (await models.Follow.findAll({
           attributes: ["followerId"],
           where: { followingId: currentID },
           raw: true,
-        });
+        })).map((f) => f.followerId);
 
-        const followerIds = followers.map((f) => f.followerId);
-
-        const followerList = await models.User.findAll({
+        res.locals.followerList = await models.User.findAll({
           attributes: ["id", "firstName", "lastName", "userName", "imagePath"],
           where: {
-            id: { [Op.in]: followerIds },
-            id: { [Op.ne]: currentID },
+            id: { [Op.in]: followerIds, [Op.ne]: currentID },
           },
           raw: true,
         });
 
-        res.locals.followerList = followerList;
-
-        // Render profile page with all data
         res.render("profile", {
           followingIds, // Pass followingIds directly to the view
         });
