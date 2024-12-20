@@ -11,7 +11,7 @@ router.use(authController.isLoggedIn);
 
 router.get('/home', controller.showHomepage);
 router.get('/search', controller.showSearchpage);
-
+router.get('/searchResult', controller.showSearchResult);
 router.get('/profile',  controller.showProfilepage);
 
 

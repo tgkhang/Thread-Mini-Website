@@ -132,13 +132,51 @@ controller.showHomepage = async (req, res) => {
   res.render("home");
 };
 
+controller.showSearchResult= async (req, res) => {
+  let ID = req.user.id;
+  //console.log(ID);
+  res.locals.currentID = ID;
+  let keyword = req.query.keyword || "";
+
+  //find all user follow by current user
+  const followedUsers = await models.Follow.findAll({
+    attributes: ["followingId"],
+    where: {
+      followerId: ID,
+    },
+    raw: true,
+  });
+
+  //console.log(followedUsers)
+  const followingIds = followedUsers.map((follow) => follow.followingId);
+  console.log(followingIds);
+
+  const options = {
+    attributes: ["id", "firstName", "lastName", "userName", "imagePath"],
+    where: {
+      [Op.and]: [{ id: { [Op.ne]: ID } }],
+    },
+    limit: 5,
+    raw: true,
+  };
+
+  if (keyword.trim() != "") {
+    options.where.userName = {
+      [Op.iLike]: `%${keyword}%`,
+    };
+  }
+
+  let suggestAccounts = await models.User.findAll(options);
+  res.locals.suggestAccounts = suggestAccounts;
+
+  console.log(followingIds);
+  res.render("search", { followingIds });
+}
+
 controller.showSearchpage = async (req, res) => {
   let ID = req.user.id;
   //console.log(ID);
   res.locals.currentID = ID;
-  //take keyword
-  let keyword = req.query.keyword || "";
-
   //find all user follow by current user
   const followedUsers = await models.Follow.findAll({
     attributes: ["followingId"],
@@ -160,18 +198,10 @@ controller.showSearchpage = async (req, res) => {
     limit: 5,
     raw: true,
   };
-
-  if (keyword.trim() != "") {
-    options.where.userName = {
-      [Op.iLike]: `%${keyword}%`,
-    };
-  }
-
   let suggestAccounts = await models.User.findAll(options);
   res.locals.suggestAccounts = suggestAccounts;
   //console.log(suggestAccounts);
   // console.log("res.locals:", res.locals);
-
   console.log(followingIds);
   res.render("search", { followingIds });
 };
