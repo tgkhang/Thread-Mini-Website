@@ -95,3 +95,37 @@ async function follow(userName,id) {
     }
   }
   
+
+  async function followHandle(userName) {
+    const followButton = document.getElementById(userName);
+    const isFollowed = followButton.classList.contains("isFollowed");
+    const action = isFollowed ? "unfollow" : "follow";
+  
+    try {
+      followButton.disabled = true;
+  
+      const response = await fetch(`/followUser?userName=${userName}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ action }),
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        followButton.innerHTML = data.isFollowed ? "Unfollow" : "Follow";
+        followButton.classList.toggle("isFollowed", data.isFollowed);
+        followButton.setAttribute("aria-pressed", data.isFollowed);
+      } else {
+        alert("Failed to update follow status. Please try again.");
+        console.error("Failed to toggle follow state");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("An error occurred. Please try again.");
+    } finally {
+      followButton.disabled = false;
+    }
+  }
+  

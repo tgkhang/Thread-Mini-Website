@@ -22,19 +22,18 @@
     >
       View
     </a>
+ 
     <a
-      role="button" href="#"
-      class="btn btn-outline-secondary btn-sm followButton"
+      href="#"
+      role="button"
+      class="btn btn-outline-secondary btn-sm {{#if isFollowed}}isFollowed{{/if}}"
       id="{{userName}}"
-      onclick="follow('{{userName}}',{{id}})"
+      aria-pressed="{{#if isFollowed}}true{{else}}false{{/if}}"
+      onclick="followHandle('{{userName}}'); return false;"
     >
-      {{#if (arrayInclude followingIds id)}}
-        Unfollow
-      {{else}}
-        Follow
-      {{/if}}
-
+      {{#if isFollowed}}Unfollow{{else}}Follow{{/if}}
     </a>
+
 
   </div>
 </li>

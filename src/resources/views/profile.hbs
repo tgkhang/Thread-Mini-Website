@@ -17,16 +17,13 @@
             
             {{else}}
                 <a
-                    role="button" href="#"
-                    class="btn btn-outline-secondary followButton"
+                    href="javascript:void(0);"
+                    role="button"
+                    class="btn btn-outline-secondary btn-sm {{#if followed}}followed{{/if}}"
                     id="{{userName}}"
-                    onclick="follow('{{userName}}',{{id}})"
-                >
-                    {{#if (arrayInclude @root.followingIds id)}}
-                        Unfollow
-                    {{else}}
-                        Follow
-                    {{/if}}
+                    onclick="followHandle('{{userName}}', {{currentID}})"
+                    >
+                    {{#if followed}}Unfollow{{else}}Follow{{/if}}
                 </a>
             {{/if}}
 
@@ -99,7 +96,7 @@
         <div class="tab-pane" id="profile" role="tabpanel" aria-labelledby="profile-tab">
             <ul class="list-group">
                 {{#each followerList}}
-                    {{>miniUserProfile followingIds=@root.followingIds}}
+                    {{>miniUserProfile}}
                 {{/each}}
 
             </ul>
@@ -109,7 +106,7 @@
         <div class="tab-pane" id="messages" role="tabpanel" aria-labelledby="messages-tab">
             <ul class="list-group">
                 {{#each followingList}}
-                    {{>miniUserProfile followingIds=@root.followingIds}}
+                    {{>miniUserProfile}}
                 {{/each}}
             </ul>
         </div>

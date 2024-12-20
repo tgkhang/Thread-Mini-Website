@@ -13,7 +13,7 @@ router.get('/home', controller.showHomepage);
 router.get('/search', controller.showSearchpage);
 router.get('/searchResult', controller.showSearchResult);
 router.get('/profile',  controller.showProfilepage);
-
+router.post('/followUser',controller.toggleFollow);
 
 router.get('/editProfile', controller.showEditProfile);
 router.get('/createThread', controller.showCreateThread);

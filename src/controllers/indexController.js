@@ -191,19 +191,41 @@ controller.showSearchpage = async (req, res) => {
   console.log(followingIds);
 
   const options = {
-    attributes: ["id", "firstName", "lastName", "userName", "imagePath"],
+    attributes: [
+      "id",
+      "firstName",
+      "lastName",
+      "userName",
+      "imagePath",
+      [
+        sequelize.literal(
+          `(SELECT COUNT(*) FROM "Follows" WHERE "Follows"."followerId" = ${ID} AND "Follows"."followingId" = "User"."id")`
+        ),
+        "isFollowed",
+      ],
+    ],
     where: {
       [Op.and]: [{ id: { [Op.notIn]: followingIds } }, { id: { [Op.ne]: ID } }],
+      
     },
     limit: 5,
     raw: true,
   };
+  
   let suggestAccounts = await models.User.findAll(options);
+  
+  suggestAccounts = suggestAccounts.map((account) => ({
+    ...account,
+    isFollowed: account.isFollowed == true, 
+  }));
   res.locals.suggestAccounts = suggestAccounts;
+
   //console.log(suggestAccounts);
   // console.log("res.locals:", res.locals);
   console.log(followingIds);
-  res.render("search", { followingIds });
+  res.render("search", 
+  //  { followingIds }
+  );
 };
 controller.showCreateThreadpage = async (req, res) => {
   res.render("createThread");
@@ -213,13 +235,9 @@ controller.showNotificationpage = async (req, res) => {
 };
 
 controller.showProfilepage = async (req, res) => {
-  //assume that current account username is
-  //const ID = req.user?.id || req.session?.userId;
-  //let ID= req.session.ID;
-  //console.log("profile here");
   let ID = req.user.id;
   res.locals.currentID = ID;
-
+ 
   //profile info
   const userInfo = await models.User.findOne({
     attributes: ["id", "firstName", "lastName", "bio", "userName", "imagePath"],
@@ -228,9 +246,7 @@ controller.showProfilepage = async (req, res) => {
     },
     raw: true,
   });
-  //console.log(userInfo);
   res.locals.userInfo = userInfo;
-
 
   //own thread
   const blogs = await models.Thread.findAll({
@@ -268,8 +284,6 @@ controller.showProfilepage = async (req, res) => {
     raw: true,
   });
 
-  //console.log(blogs);
-
   const processedBlogs = blogs.map((blog) => ({
     id: blog.id,
     text: blog.text,
@@ -291,22 +305,38 @@ controller.showProfilepage = async (req, res) => {
     },
     raw: true,
   });
-  //console.log(following);
 
   if (following.length === 0) {
     res.locals.followingList = [];
   } else {
     const followingIds = following.map((follow) => follow.followingId);
-
+    console.log("follwingid:"+followingIds);
     const options = {
-      attributes: ["id", "firstName", "lastName", "userName", "imagePath"],
+      attributes: [
+        "id",
+        "firstName",
+        "lastName",
+        "userName",
+        "imagePath",
+        [
+          sequelize.literal(
+            `(SELECT COUNT(*) FROM "Follows" WHERE "Follows"."followerId" = ${ID} AND "Follows"."followingId" = "User"."id")`
+          ),
+          "isFollowed",
+        ],
+      ],
       where: {
         [Op.and]: [{ id: { [Op.in]: followingIds } }, { id: { [Op.ne]: ID } }],
       },
       raw: true,
     };
 
-    const followingList = await models.User.findAll(options);
+    let followingList = await models.User.findAll(options);
+    followingList = followingList.map((account) => ({
+         ...account,
+          isFollowed: account.isFollowed == true, 
+    }));
+    console.log(followingList);
     res.locals.followingList = followingList;
   }
 
@@ -319,31 +349,41 @@ controller.showProfilepage = async (req, res) => {
     raw: true,
   });
 
-  //console.log(followers);
-
   if (followers.length === 0) {
     res.locals.followerList = [];
   } else {
     const followerIds = followers.map((follow) => follow.followerId);
 
     const options1 = {
-      attributes: ["id", "firstName", "lastName", "userName", "imagePath"],
+      attributes: [
+        "id",
+        "firstName",
+        "lastName",
+        "userName",
+        "imagePath",
+        [
+          sequelize.literal(
+            `(SELECT COUNT(*) FROM "Follows" WHERE "Follows"."followerId" = ${ID} AND "Follows"."followingId" = "User"."id")`
+          ),
+          "isFollowed",
+        ],
+      ],
       where: {
         [Op.and]: [{ id: { [Op.in]: followerIds } }, { id: { [Op.ne]: ID } }],
       },
       raw: true,
     };
 
-    const followerList = await models.User.findAll(options1);
-
-    //console.log(followerList);
+    let followerList = await models.User.findAll(options1);
+    followerList = followerList.map((account) => ({
+      ...account,
+      isFollowed: account.isFollowed == true, 
+    }));
     res.locals.followerList = followerList;
   }
-
-  const followingIds = following.map((f) => f.followingId); //to array of IDs
-  //console.log(followingIds)
-  res.render("profile", { followingIds });
+  res.render("profile");
 };
+
 
 controller.showEditProfile = async (req, res) => {
   //assume that current account username is
@@ -512,6 +552,57 @@ controller.showCreateThread = async(req, res) => {
   res.locals.userInfo = userInfo;
   res.render("createThread");
 };
+controller.toggleFollow = async (req, res) => {
+  let ID = req.user.id;
+  res.locals.currentID = ID;
+
+  const { userName } = req.query;
+  const {  action } = req.body;
+  console.log(ID)
+  console.log(userName);
+  console.log(action);
+
+  if (!userName || !ID || !["follow", "unfollow"].includes(action)) {
+    return res.status(400).json({ error: "Invalid input" });
+  }
+
+  try {
+    const user = await models.User.findOne({
+      attributes: ["id"],
+      where: { userName },
+      raw: true,
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const followingId = user.id;
+
+    if (action === "follow") {
+      await models.Follow.create({ followerId: ID, followingId });
+    } else if (action === "unfollow") {
+      const existingFollow = await models.Follow.findOne({
+        where: { followerId: ID, followingId },
+      });
+      if (existingFollow) {
+        await existingFollow.destroy();
+      }
+    }
+
+    const isFollowed = await models.Follow.findOne({
+      where: { followerId: ID, followingId },
+    }) !== null;
+
+    res.json({ isFollowed });
+  } catch (error) {
+    console.error("Error handling follow action:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+
+
 
 controller.unfollowUser = async (req, res) => {
   //link / unfollow?id=id
@@ -603,9 +694,9 @@ controller.likeThread = async (req, res) => {
   const { threadId } = req.query; 
   const { action } = req.body; 
   const currentID = req.user.id;
-  console.log("like thread"+ action.toString());
-  console.log(threadId);
-  console.log(action.toString());
+  //console.log("like thread"+ action.toString());
+  //console.log(threadId);
+  //console.log(action.toString());
   try {
     if (action === "like") {
       await models.Like.create({ threadId, userId: currentID });
@@ -652,11 +743,23 @@ controller.showPage = async (req, res) => {
   const blogId = req.params.thread || null;
   res.locals.requestedPage = requestedPage;
 
-  // If the requested page is not static or dynamic
   if (!renderablePages.static.includes(requestedPage) && !renderablePages.dynamic.includes(requestedPage)) {
     const userInfo = await models.User.findOne({
       where: { userName: requestedPage },
-      attributes: ["id", "firstName", "lastName", "bio", "userName", "imagePath"],
+      attributes: [
+        "id",
+        "firstName",
+        "lastName",
+        "bio",
+        "userName",
+        "imagePath",
+        [
+          sequelize.literal(
+            `(SELECT COUNT(*) FROM "Follows" WHERE "Follows"."followerId" = ${currentID} AND "Follows"."followingId" = "User"."id")`
+          ),
+          "isFollowed",
+        ],
+      ],
       raw: true,
     });
 
@@ -664,7 +767,6 @@ controller.showPage = async (req, res) => {
       res.locals.requestID = userInfo.id;
 
       if (blogId) {
-        // Fetch specific blog details
         const blog = await models.Thread.findOne({
           attributes: [
             "id",
@@ -673,11 +775,15 @@ controller.showPage = async (req, res) => {
             "userId",
             "createdAt",
             [
-              sequelize.literal(`(SELECT COUNT(*) FROM "Likes" WHERE "Likes"."threadId" = "Thread"."id")`),
+              sequelize.literal(
+                `(SELECT COUNT(*) FROM "Likes" WHERE "Likes"."threadId" = "Thread"."id")`
+              ),
               "totalLikes",
             ],
             [
-              sequelize.literal(`(SELECT COUNT(*) FROM "Likes" WHERE "Likes"."threadId" = "Thread"."id" AND "Likes"."userId" = ${currentID})`),
+              sequelize.literal(
+                `(SELECT COUNT(*) FROM "Likes" WHERE "Likes"."threadId" = "Thread"."id" AND "Likes"."userId" = ${currentID})`
+              ),
               "status",
             ],
           ],
@@ -730,7 +836,6 @@ controller.showPage = async (req, res) => {
         res.render("blogDetail");
         return;
       } else {
-        // Fetch user profile and blogs
         res.locals.userInfo = userInfo;
 
         res.locals.blogs = (await models.Thread.findAll({
@@ -741,11 +846,15 @@ controller.showPage = async (req, res) => {
             "userId",
             "createdAt",
             [
-              sequelize.literal(`(SELECT COUNT(*) FROM "Likes" WHERE "Likes"."threadId" = "Thread"."id")`),
+              sequelize.literal(
+                `(SELECT COUNT(*) FROM "Likes" WHERE "Likes"."threadId" = "Thread"."id")`
+              ),
               "totalLikes",
             ],
             [
-              sequelize.literal(`(SELECT COUNT(*) FROM "Likes" WHERE "Likes"."threadId" = "Thread"."id" AND "Likes"."userId" = ${currentID})`),
+              sequelize.literal(
+                `(SELECT COUNT(*) FROM "Likes" WHERE "Likes"."threadId" = "Thread"."id" AND "Likes"."userId" = ${currentID})`
+              ),
               "status",
             ],
           ],
@@ -778,7 +887,19 @@ controller.showPage = async (req, res) => {
         })).map((f) => f.followingId);
 
         res.locals.followingList = await models.User.findAll({
-          attributes: ["id", "firstName", "lastName", "userName", "imagePath"],
+          attributes: [
+            "id",
+            "firstName",
+            "lastName",
+            "userName",
+            "imagePath",
+            [
+              sequelize.literal(
+                `(SELECT COUNT(*) FROM "Follows" WHERE "Follows"."followerId" = ${currentID} AND "Follows"."followingId" = "User"."id")`
+              ),
+              "isFollowed",
+            ],
+          ],
           where: {
             id: { [Op.in]: followingIds, [Op.ne]: currentID },
           },
@@ -792,16 +913,26 @@ controller.showPage = async (req, res) => {
         })).map((f) => f.followerId);
 
         res.locals.followerList = await models.User.findAll({
-          attributes: ["id", "firstName", "lastName", "userName", "imagePath"],
+          attributes: [
+            "id",
+            "firstName",
+            "lastName",
+            "userName",
+            "imagePath",
+            [
+              sequelize.literal(
+                `(SELECT COUNT(*) FROM "Follows" WHERE "Follows"."followerId" = ${currentID} AND "Follows"."followingId" = "User"."id")`
+              ),
+              "isFollowed",
+            ],
+          ],
           where: {
             id: { [Op.in]: followerIds, [Op.ne]: currentID },
           },
           raw: true,
         });
 
-        res.render("profile", {
-          followingIds, // Pass followingIds directly to the view
-        });
+        res.render("profile");
         return;
       }
     } else {
@@ -809,6 +940,8 @@ controller.showPage = async (req, res) => {
     }
   }
 };
+
+
 
 
 // const pages = ['changePassword','createThread','emailVerify','notification','profile','forgotPassword','signup','inputCode','successPage','blogDetail'];
