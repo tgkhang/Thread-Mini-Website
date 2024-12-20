@@ -13,20 +13,16 @@
         <div class="d-flex justify-content-center gap-3">
 
             <a
-                role="button" href="#"
-                class="btn btn-outline-secondary followButton"
+                href="#"
+                role="button"
+                class="btn btn-outline-secondary btn-sm {{#if isFollowed}}isFollowed{{/if}}"
                 id="{{userName}}"
-                onclick="follow('{{userName}}',{{id}})"
+                aria-pressed="{{#if isFollowed}}true{{else}}false{{/if}}"
+                onclick="followHandle('{{userName}}'); return false;"
                 >
-                {{#if (arrayInclude followingIds id)}}
-                    Unfollow
-                {{else}}
-                    Follow
-                {{/if}}
-
+                {{#if isFollowed}}Unfollow{{else}}Follow{{/if}}
             </a>
-            
-            {{!-- <a href="/editProfile" class="btn btn-outline-secondary">Follow</a> --}}
+
             <button class="btn btn-outline-secondary">Share Profile</button>
         </div>
     </div>
@@ -36,7 +32,7 @@
     <ul class="nav nav-tabs mb-4 justify-content-center col-10 container" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
             <button
-                class="nav-link active"
+                class="nav-link active me-2"
                 id="home-tab"
                 data-bs-toggle="tab"
                 data-bs-target="#home"
@@ -50,7 +46,7 @@
         </li>
         <li class="nav-item" role="presentation">
             <button
-                class="nav-link"
+                class="nav-link me-2"
                 id="profile-tab"
                 data-bs-toggle="tab"
                 data-bs-target="#profile"
@@ -78,6 +74,7 @@
         </li>
     </ul>
 
+
     <!-- Tab Content -->
     <div class="tab-content container my-4 col-md-10">
         
@@ -95,7 +92,7 @@
         <div class="tab-pane" id="profile" role="tabpanel" aria-labelledby="profile-tab">
             <ul class="list-group">
                 {{#each followerList}}
-                    {{>miniUserProfile followingIds=@root.followingIds}}
+                    {{>miniUserProfile}}
                 {{/each}}
 
             </ul>
@@ -105,7 +102,7 @@
         <div class="tab-pane" id="messages" role="tabpanel" aria-labelledby="messages-tab">
             <ul class="list-group">
                 {{#each followingList}}
-                    {{>miniUserProfile followingIds=@root.followingIds}}
+                    {{>miniUserProfile}}
                 {{/each}}
             </ul>
         </div>

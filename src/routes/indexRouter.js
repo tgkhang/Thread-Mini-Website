@@ -33,7 +33,7 @@ router.post('/follow',controller.followUser);
 
 router.post('/likeThread',controller.likeThread);
 
-router.get('/:page/:thread?', controller.showPage);
+router.get('/:page/:thread?', controller.show);
 
 router.get('/', (req, res) => {
     res.redirect('/home');
