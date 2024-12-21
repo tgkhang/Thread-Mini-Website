@@ -1,13 +1,12 @@
 {{>header}}
-
 <main class="col-md-5 d-flex flex-column align-items-center pt-5 mt-5 container">
     <!-- Tabs -->
-    <ul class="nav nav-tabs mb-4" id="homeTabs" role="tablist">
+    <ul class="nav nav-tabs mb-4 sticky-top shadow" id="homeTabs" role="tablist" style="z-index: 1020; top: 60px; background-color: transparent; border: none;">
         <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="for-you-tab" data-bs-toggle="tab" data-bs-target="#for-you" type="button" role="tab" aria-controls="for-you" aria-selected="true">For You</button>
+            <button class="nav-link active text-dark fw-bold" id="for-you-tab" data-bs-toggle="tab" data-bs-target="#for-you" type="button" role="tab" aria-controls="for-you" aria-selected="true">For You</button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="following-tab" data-bs-toggle="tab" data-bs-target="#following" type="button" role="tab" aria-controls="following" aria-selected="false">Following</button>
+            <button class="nav-link text-dark fw-bold" id="following-tab" data-bs-toggle="tab" data-bs-target="#following" type="button" role="tab" aria-controls="following" aria-selected="false">Following</button>
         </li>
     </ul>
 
@@ -15,21 +14,102 @@
     <div class="tab-content w-100" id="homeTabsContent">
         <!-- For You Tab -->
         <div class="tab-pane fade show active" id="for-you" role="tabpanel" aria-labelledby="for-you-tab">
-            {{#each blogs}}
-
-                {{>blog}}
-
-            {{/each}}
+            <div id="forYouBlogs">
+                {{#each blogs}}
+                    {{>blog}}
+                {{/each}}
+            </div>
+            <button class="btn btn-primary mb-5" id="loadMoreForYou" data-offset="10">Load more</button>
         </div>
 
         <!-- Following Tab -->
         <div class="tab-pane fade" id="following" role="tabpanel" aria-labelledby="following-tab">
-            {{#each followingBlogs}}
-                {{>blog}}
-            {{/each}}
-            
+            <div id="followingBlogs">
+                {{#each followingBlogs}}
+                    {{>blog}}
+                {{/each}}
+            </div>
+            <button class="btn btn-primary" id="loadMoreFollowing" data-offset="10">Load more</button>
         </div>
     </div>
 </main>
 
+
 {{>navBar}}
+
+<style>
+   
+.nav-tabs {
+    border-bottom: none; 
+    background-color: transparent; 
+}
+
+.nav-tabs .nav-link {
+    border: none; 
+    border-radius: 0; /* Make tabs flat */
+    font-weight: bold; 
+    padding: 10px 15px; 
+    transition: background-color 0.3s ease, color 0.3s ease; 
+}
+
+.nav-tabs .nav-link.active {
+    color: #007bff; 
+    border-bottom: 3px solid #007bff; 
+    background-color: transparent; 
+}
+
+.nav-tabs .nav-link:hover {
+    background-color: rgba(0, 123, 255, 0.1); 
+    color: #0056b3; 
+}
+
+.sticky-top {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("loadMoreForYou").addEventListener("click", async (e) => {
+    const button = e.target;
+    const offset = parseInt(button.getAttribute("data-offset"));
+
+    try {
+      const response = await fetch(`/load-more?tab=for-you&offset=${offset}`);
+      const data = await response.text();
+
+      if (data) {
+        document.getElementById("forYouBlogs").insertAdjacentHTML("beforeend", data);
+        button.setAttribute("data-offset", offset + 10);
+      } else {
+        button.disabled = true; 
+        button.innerText = "No more blogs";
+      }
+    } catch (err) {
+      console.error("Error loading more blogs:", err);
+    }
+  });
+
+  
+  document.getElementById("loadMoreFollowing").addEventListener("click", async (e) => {
+    const button = e.target;
+    const offset = parseInt(button.getAttribute("data-offset"));
+
+    try {
+      const response = await fetch(`/load-more?tab=following&offset=${offset}`);
+      const data = await response.text();
+
+      if (data) {
+        document.getElementById("followingBlogs").insertAdjacentHTML("beforeend", data);
+        button.setAttribute("data-offset", offset + 10);
+      } else {
+        button.disabled = true; // Disable button if no more data
+        button.innerText = "No more blogs";
+      }
+    } catch (err) {
+      console.error("Error loading more blogs:", err);
+    }
+  });
+});
+
+</script>

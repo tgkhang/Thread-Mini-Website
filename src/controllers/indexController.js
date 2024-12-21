@@ -131,6 +131,120 @@ controller.showHomepage = async (req, res) => {
   //console.log(followingBlogs);
   res.render("home");
 };
+controller.loadMoreBlogs = async (req, res) => {
+  const { tab, offset } = req.query;
+  const ID = req.user.id;
+  const limit = 10;
+
+  try {
+    let blogs;
+
+    if (tab === "for-you") {
+      blogs = await models.Thread.findAll({
+        attributes: [
+          "id",
+          "text",
+          ["imagePath", "threadImage"],
+          "userId",
+          "createdAt",
+          [
+            sequelize.literal(
+              `(SELECT COUNT(*) FROM "Likes" WHERE "Likes"."threadId" = "Thread"."id")`
+            ),
+            "totalLikes",
+          ],
+          [
+            sequelize.literal(
+              `(SELECT COUNT(*) FROM "Likes" WHERE "Likes"."threadId" = "Thread"."id" AND "Likes"."userId" = ${ID})`
+            ),
+            "status",
+          ],
+        ],
+        where: {
+          userId: {
+            [Op.ne]: ID,
+          },
+        },
+        include: [
+          {
+            model: models.User,
+            as: "user",
+            attributes: ["userName", "imagePath"],
+          },
+        ],
+        order: [["createdAt", "DESC"]],
+        offset: parseInt(offset),
+        limit,
+        raw: true,
+      });
+    } else if (tab === "following") {
+      const followedUsers = await models.Follow.findAll({
+        attributes: ["followingId"],
+        where: { followerId: ID },
+        raw: true,
+      });
+
+      const followingIds = followedUsers.map((follow) => follow.followingId);
+
+      blogs = await models.Thread.findAll({
+        attributes: [
+          "id",
+          "text",
+          ["imagePath", "threadImage"],
+          "userId",
+          "createdAt",
+          [
+            sequelize.literal(
+              `(SELECT COUNT(*) FROM "Likes" WHERE "Likes"."threadId" = "Thread"."id")`
+            ),
+            "totalLikes",
+          ],
+          [
+            sequelize.literal(
+              `(SELECT COUNT(*) FROM "Likes" WHERE "Likes"."threadId" = "Thread"."id" AND "Likes"."userId" = ${ID})`
+            ),
+            "status",
+          ],
+        ],
+        where: {
+          userId: {
+            [Op.in]: followingIds,
+          },
+        },
+        include: [
+          {
+            model: models.User,
+            as: "user",
+            attributes: ["userName", "imagePath"],
+          },
+        ],
+        order: [["createdAt", "DESC"]],
+        offset: parseInt(offset),
+        limit,
+        raw: true,
+      });
+    } else {
+      return res.status(400).send("Invalid tab");
+    }
+
+    const processedBlogs = blogs.map((blog) => ({
+      id: blog.id,
+      text: blog.text,
+      threadImage: blog.threadImage,
+      userId: blog.userId,
+      createdAt: blog.createdAt,
+      userName: blog["user.userName"],
+      userImage: blog["user.imagePath"],
+      totalLikes: blog.totalLikes,
+      liked: blog.status > 0,
+    }));
+
+    res.render("partials/blogs", { blogs: processedBlogs });
+  } catch (error) {
+    console.error("Error loading more blogs:", error);
+    res.status(500).send("Internal server error");
+  }
+};
 
 controller.showSearchResult = async (req, res) => {
   let ID = req.user.id;

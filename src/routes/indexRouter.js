@@ -30,6 +30,7 @@ router.post('/updateProfile',
 
 router.delete("/unfollow",controller.unfollowUser);
 //router.post('/follow',controller.followUser);
+router.get("/load-more", controller.loadMoreBlogs);
 
 router.post('/likeThread',controller.likeThread);
 router.get('/notifications',controller.showNotifications);
