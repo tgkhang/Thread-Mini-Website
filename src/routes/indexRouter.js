@@ -33,6 +33,7 @@ router.post('/follow',controller.followUser);
 
 router.post('/likeThread',controller.likeThread);
 router.get('/notifications',controller.showNotifications);
+router.post('/notifications',controller.seenhandle);
 router.get('/:page/:thread?', controller.show);
 
 router.get('/', (req, res) => {

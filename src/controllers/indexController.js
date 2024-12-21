@@ -603,6 +603,34 @@ controller.showCreateThread = async (req, res) => {
   res.locals.userInfo = userInfo;
   res.render("createThread");
 };
+
+controller.seenhandle= async (req, res) => {
+  const ID = req.user.id; 
+  const { notiId } = req.query; 
+  const { action } = req.body; 
+
+  if (!notiId || !ID || !["seen", "unseen"].includes(action)) {
+    return res.status(400).json({ error: "Invalid input" });
+  }
+
+  try {
+    const notification = await models.Notification.findOne({
+      where: { id: notiId, userId: ID },
+    });
+
+    if (!notification) {
+      return res.status(404).json({ error: "Notification not found" });
+    }
+    const newIsSeen = action === "seen";
+    notification.isSeen = newIsSeen;
+    await notification.save();
+
+    res.json({ isSeen: newIsSeen });
+  } catch (error) {
+    console.error("Error handling notification action:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+}
 controller.toggleFollow = async (req, res) => {
   let ID = req.user.id;
   res.locals.currentID = ID;

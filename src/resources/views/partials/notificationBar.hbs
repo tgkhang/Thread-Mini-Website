@@ -19,13 +19,18 @@
         </div>
 
         <!-- Right Section (Action Button) -->
-        <button 
-            class="btn btn-outline-secondary btn-sm ms-3 toggle-seen-btn" 
-            data-notification-id="{{id}}" 
-            data-is-seen="{{isSeen}}" 
-            onclick="toggleSeenStatus(this)">
+   
+
+        <a
+            href="#"
+            role="button"
+            class="btn btn-outline-secondary btn-sm ms-3 {{#if isread}}isread{{/if}}"
+            id="{{id}}"
+            aria-pressed="{{#if isFollowed}}true{{else}}false{{/if}}"
+            onclick="seenHandle('{{id}}'); "
+        >
             <i class="bi {{#if isSeen}}bi-eye{{else}}bi-eye-slash{{/if}}"></i>
-        </button>
+        </a>
     </div>
 </div>
 
