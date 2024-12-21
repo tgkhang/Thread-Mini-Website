@@ -230,8 +230,47 @@ controller.showSearchpage = async (req, res) => {
 controller.showCreateThreadpage = async (req, res) => {
   res.render("createThread");
 };
-controller.showNotificationpage = async (req, res) => {
-  res.render("notification");
+controller.showNotifications = async (req, res) => {
+  try {
+    const ID = req.user.id; 
+    res.locals.currentID = ID;
+
+    const allNotifications = await models.Notification.findAll({
+      attributes: ["id", "userId", "text", "isSeen", "type", "createdAt"],
+      where: { userId: ID },
+      order: [["createdAt", "DESC"]],
+      raw: true,
+      limit:20,
+    });
+
+    res.locals.allNotifications = allNotifications;
+    
+    const seenNotifications = await models.Notification.findAll({
+      attributes: ["id", "userId", "text", "isSeen", "type", "createdAt"],
+      where: { userId: ID ,isSeen:true},
+      order: [["createdAt", "DESC"]],
+      raw: true,
+      limit:20,
+    });
+
+    res.locals.seenNotifications  = seenNotifications ;
+
+    const unseenNotifications = await models.Notification.findAll({
+      attributes: ["id", "userId", "text", "isSeen", "type", "createdAt"],
+      where: { userId: ID ,isSeen:false},
+      order: [["createdAt", "DESC"]],
+      raw: true,
+      limit:20,
+    });
+
+    res.locals.unseenNotifications  = unseenNotifications ;
+
+
+    res.render("notifications");
+  } catch (error) {
+    console.error("Error fetching notifications:", error);
+    res.status(500).send("An error occurred while fetching notifications.");
+  }
 };
 
 controller.showProfilepage = async (req, res) => {

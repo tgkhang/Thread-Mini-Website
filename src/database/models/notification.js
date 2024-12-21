@@ -1,7 +1,6 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class Notification extends Model {
     /**
@@ -10,35 +9,59 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
-      Notification.belongsTo(models.User,{
+      
+      Notification.belongsTo(models.User, {
+        foreignKey: 'sourceId',
+        as: 'sourceUser',
+      });
+
+      
+      Notification.belongsTo(models.User, {
         foreignKey: 'userId',
-        as: 'user',
-      })
+        as: 'recipientUser',
+      });
     }
   }
-  Notification.init({
-    text: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    userId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'Users', 
-        key: 'id', 
+
+  Notification.init(
+    {
+      text: {
+        type: DataTypes.STRING,
+        allowNull: false,
       },
-      onDelete: 'CASCADE',
+      sourceId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Users',
+          key: 'id',
+        },
+        onDelete: 'CASCADE',
+      },
+      userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Users', 
+          key: 'id',
+        },
+        onDelete: 'CASCADE',
+      },
+      isSeen: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      type: {
+        type: DataTypes.ENUM('LIKE', 'FOLLOW', 'COMMENT'), 
+        allowNull: false,
+      },
     },
-    isSeen: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-    },
-  }, {
-    sequelize,
-    modelName: 'Notification',
-    tableName: 'Notifications',  
-  });
+    {
+      sequelize,
+      modelName: 'Notification',
+      tableName: 'Notifications',
+    }
+  );
+
   return Notification;
 };
