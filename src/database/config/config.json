@@ -14,7 +14,10 @@
     "dialect": "mysql"
   },
   "production": {
-    "use_env_variable":"POSTGRESQL_URL",
+    "username": "thread_2nb7_user",
+    "password": "2JdPjePYuk394CFPPKjT5M9AaF2qOWOh",
+    "database": "thread_2nb7",
+    "host": "dpg-ctja8bbtq21c73e1ee5g-a.singapore-postgres.render.com",
     "dialect": "postgres",
     "dialectOptions": {
       "ssl": {
