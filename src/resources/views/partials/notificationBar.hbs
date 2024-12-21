@@ -2,17 +2,31 @@
     {{#if (eq type "FOLLOW")}}follow{{/if}} 
     {{#if (eq type "LIKE")}}like{{/if}} 
     {{#if (eq type "COMMENT")}}comment{{/if}}">
-    <div class="d-flex flex-column">
-        <div class="d-flex align-items-center">
-            <strong class="me-2">
-                <a href="/{{sourceUserName}}" class="text-decoration-none text-dark">{{sourceUserName}}</a>
-            </strong>
-            <p class="mb-0">
-                {{#if (eq type "FOLLOW")}}started following you{{/if}}
-                {{#if (eq type "LIKE")}}liked your thread{{/if}}
-                {{#if (eq type "COMMENT")}}commented on your thread{{/if}}
-            </p>
+    <div class="d-flex justify-content-between align-items-center">
+        <!-- Left Section (Notification Content) -->
+        <div class="d-flex flex-column text-center w-75">
+            <div class="ps-4 d-flex justify-content-center align-items-center">
+                <strong class="me-1">
+                    <a href="/{{sourceUserName}}" class="text-decoration-none text-dark">{{sourceUserName}}</a>
+                </strong>
+                <p class="mb-0">
+                    {{#if (eq type "FOLLOW")}}started following you{{/if}}
+                    {{#if (eq type "LIKE")}}liked your thread{{/if}}
+                    {{#if (eq type "COMMENT")}}commented on your thread{{/if}}
+                </p>
+            </div>
+            <p class="text-muted mt-1 mb-0">{{timeExpectation createdAt}}</p>
         </div>
-        <p class="text-muted mt-1 mb-0">{{timeExpectation createdAt}}</p>
+
+        <!-- Right Section (Action Button) -->
+        <button 
+            class="btn btn-outline-secondary btn-sm ms-3 toggle-seen-btn" 
+            data-notification-id="{{id}}" 
+            data-is-seen="{{isSeen}}" 
+            onclick="toggleSeenStatus(this)">
+            <i class="bi {{#if isSeen}}bi-eye{{else}}bi-eye-slash{{/if}}"></i>
+        </button>
     </div>
 </div>
+
+
