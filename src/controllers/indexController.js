@@ -236,7 +236,12 @@ controller.showNotifications = async (req, res) => {
     res.locals.currentID = ID;
 
     const allNotifications = await models.Notification.findAll({
-      attributes: ["id", "userId", "text", "isSeen", "type", "createdAt"],
+      attributes: ["id", "userId", "text", "isSeen", "type", "createdAt",
+        [
+          sequelize.literal(`(SELECT "userName" FROM "Users" WHERE "Users"."id" = "Notification"."sourceId")`),
+          "sourceUserName", 
+        ],
+      ],
       where: { userId: ID },
       order: [["createdAt", "DESC"]],
       raw: true,
@@ -246,7 +251,12 @@ controller.showNotifications = async (req, res) => {
     res.locals.allNotifications = allNotifications;
     
     const seenNotifications = await models.Notification.findAll({
-      attributes: ["id", "userId", "text", "isSeen", "type", "createdAt"],
+      attributes: ["id", "userId", "text", "isSeen", "type", "createdAt",
+        [
+          sequelize.literal(`(SELECT "userName" FROM "Users" WHERE "Users"."id" = "Notification"."sourceId")`),
+          "sourceUserName", // Fetch source user's userName directly
+        ],
+      ],
       where: { userId: ID ,isSeen:true},
       order: [["createdAt", "DESC"]],
       raw: true,
@@ -256,7 +266,12 @@ controller.showNotifications = async (req, res) => {
     res.locals.seenNotifications  = seenNotifications ;
 
     const unseenNotifications = await models.Notification.findAll({
-      attributes: ["id", "userId", "text", "isSeen", "type", "createdAt"],
+      attributes: ["id", "userId", "text", "isSeen", "type", "createdAt",
+        [
+          sequelize.literal(`(SELECT "userName" FROM "Users" WHERE "Users"."id" = "Notification"."sourceId")`),
+          "sourceUserName", // Fetch source user's userName directly
+        ],
+      ],
       where: { userId: ID ,isSeen:false},
       order: [["createdAt", "DESC"]],
       raw: true,

@@ -4,8 +4,15 @@
     {{#if (eq type "COMMENT")}}comment{{/if}}">
     <div class="d-flex flex-column">
         <div class="d-flex align-items-center">
-    {{text}}
-    </div>
-   <p class="text-muted mt-1 mb-0">{{timeExpectation createdAt}}</p>
+            <strong class="me-2">
+                <a href="/{{sourceUserName}}" class="text-decoration-none text-dark">{{sourceUserName}}</a>
+            </strong>
+            <p class="mb-0">
+                {{#if (eq type "FOLLOW")}}started following you{{/if}}
+                {{#if (eq type "LIKE")}}liked your thread{{/if}}
+                {{#if (eq type "COMMENT")}}commented on your thread{{/if}}
+            </p>
+        </div>
+        <p class="text-muted mt-1 mb-0">{{timeExpectation createdAt}}</p>
     </div>
 </div>
