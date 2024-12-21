@@ -20,16 +20,16 @@ const {checkImageExists,extractPublicIdFromUrl} = require('./controllers/image')
 //redis
 const {RedisStore} = require("connect-redis")
 const {createClient}= require('redis');
-// let redisClient= createClient({
-//     //dotenv
-//     url : process.env.REDIS_URL
-//     //internal link for server not run in local hosst any more
-//     //url:'redis://red-ct8ttb8gph6c73di5qag:6379'
+let redisClient= createClient({
+    //dotenv
+    //url : process.env.REDIS_URL
+    //internal link for server not run in local hosst any more
+    url:'redis://red-ctjb25ggph6c738fkohg:6379'
 
-//     //external link for local host
-//     //url:'rediss://red-ct8ttb8gph6c73di5qag:AYkXdNGFp7TGYoXGgQgxqEPLD1zUVXQ5@singapore-redis.render.com:6379'
-// })
-// redisClient.connect().catch(console.error)
+    //external link for local host
+    //url:'rediss://red-ctjb25ggph6c738fkohg:0H1wNB1TP1C2yBJ7di2bLMfvHzUJJvDl@singapore-redis.render.com:6379'
+})
+redisClient.connect().catch(console.error)
 
 
 //passport
@@ -37,10 +37,10 @@ const passport = require('./controllers/passport');
 const flash = require('connect-flash');
 
 
-// let redisStore = new RedisStore({
-//     client: redisClient,
-//     prefix: "myapp:",
-//   })
+let redisStore = new RedisStore({
+    client: redisClient,
+    prefix: "myapp:",
+  })
 
 
 //static folder
@@ -80,7 +80,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(session({
     //secret:'S3cret',
     secret:process.env.SESSION_SECRET,
-    //store: redisStore,
+    store: redisStore,
     resave: false,
     saveUninitialized: false,
     cookie: {
