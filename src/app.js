@@ -24,10 +24,12 @@ let redisClient= createClient({
     //dotenv
     //url : process.env.REDIS_URL
     //internal link for server not run in local hosst any more
-    url:'redis://red-ctjb25ggph6c738fkohg:6379'
+    //url:'redis://red-ctjb25ggph6c738fkohg:6379'
 
     //external link for local host
     //url:'rediss://red-ctjb25ggph6c738fkohg:0H1wNB1TP1C2yBJ7di2bLMfvHzUJJvDl@singapore-redis.render.com:6379'
+
+    url: process.env.REDIS_URL
 })
 redisClient.connect().catch(console.error)
 
