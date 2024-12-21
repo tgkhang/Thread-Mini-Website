@@ -130,12 +130,14 @@ async function follow(userName,id) {
   }
 
   async function seenHandle(notificationId) {
-    const seenButton = document.getElementById(notificationId);
-    const isSeen = seenButton.classList.contains("isread"); 
-
+    const seenButton = document.getElementById(`notification-${notificationId}`);
+    const isSeen = seenButton.getAttribute("data-is-seen") === "true";
+  
     try {
-          const action = isSeen ? "unseen" : "seen";
-      
+      // Toggle action between "seen" and "unseen"
+      const action = isSeen ? "unseen" : "seen";
+  
+      // Send request to the server
       const response = await fetch(`/notifications?notiId=${notificationId}`, {
         method: "POST",
         headers: {
@@ -146,21 +148,18 @@ async function follow(userName,id) {
   
       if (response.ok) {
         const data = await response.json();
-        const newIsSeen = data.isSeen; 
+        const newIsSeen = data.isSeen;
   
-        seenButton.classList.toggle("isread", newIsSeen);
-        seenButton.setAttribute("aria-pressed", newIsSeen);
+        // Update button state
+        seenButton.setAttribute("data-is-seen", newIsSeen);
         seenButton.innerHTML = `<i class="bi ${newIsSeen ? "bi-eye" : "bi-eye-slash"}"></i>`;
       } else {
         alert("Failed to update notification status. Please try again.");
-        console.error("Failed to toggle seen state");
       }
     } catch (error) {
       console.error("Error:", error);
       alert("An error occurred. Please try again.");
-    } finally {
-      // Re-enable the button
-      seenButton.disabled = false;
     }
   }
+  
   

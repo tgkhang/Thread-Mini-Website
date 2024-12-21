@@ -17,7 +17,7 @@ router.post('/followUser',controller.toggleFollow);
 
 router.get('/editProfile', controller.showEditProfile);
 router.get('/createThread', controller.showCreateThread);
-router.post('/createThread', upload.single('image'),controller.createThread);
+router.post('/createThread', upload.single('image'),controller.createThread);// noti??
 
 router.post('/comment/:userName/:threadId',controller.createComment);
 
@@ -29,7 +29,7 @@ router.post('/updateProfile',
 
 
 router.delete("/unfollow",controller.unfollowUser);
-router.post('/follow',controller.followUser);
+//router.post('/follow',controller.followUser);
 
 router.post('/likeThread',controller.likeThread);
 router.get('/notifications',controller.showNotifications);

@@ -660,6 +660,15 @@ controller.toggleFollow = async (req, res) => {
 
     if (action === "follow") {
       await models.Follow.create({ followerId: ID, followingId });
+
+      //create a notification
+      await models.Notification.create({
+        text: `${req.user.userName} started following you`, 
+        sourceId: ID, 
+        userId: followingId, 
+        type: "FOLLOW", 
+        isSeen: false, 
+      });
     } else if (action === "unfollow") {
       const existingFollow = await models.Follow.findOne({
         where: { followerId: ID, followingId },
@@ -727,7 +736,6 @@ controller.createComment = async (req, res) => {
   const { text } = req.body;
   const userName = req.params.userName;
 
-  //console.log("In controller, req.body:", req.body, blogId); // Debugging
   const userInfo = {
     userName: req.user.userName,
     imagePath: req.user.imagePath || null,
@@ -748,14 +756,24 @@ controller.createComment = async (req, res) => {
       userId: ID,
       text: text.trim(),
     });
-
-    res.redirect(`/${userName}/${threadId}`);
-    return res.render("blogDetail", {
-      //return res.render("error", {
-      done: true,
-      userInfo,
-      //message: "Thread created successfully"
+    const thread = await models.Thread.findOne({
+      attributes: ["userId"], // Get the thread owner's userId
+      where: { id: threadId },
     });
+
+    if (thread && thread.userId !== ID) {
+    
+      await models.Notification.create({
+        text: `${req.user.userName} commented on your thread`, 
+        sourceId: ID, 
+        userId: thread.userId, 
+        type: "COMMENT", 
+        isSeen: false, 
+      });
+    }
+    
+    res.redirect(`/${userName}/${threadId}`);
+  
   } catch (err) {
     console.error("Database update failed:", err);
     return res.status(500).render("blogDetail", {
@@ -776,6 +794,23 @@ controller.likeThread = async (req, res) => {
   try {
     if (action === "like") {
       await models.Like.create({ threadId, userId: currentID });
+
+      const thread = await models.Thread.findOne({
+        attributes: ["userId"], 
+        where: { id: threadId },
+      });
+
+      if (thread && thread.userId !== currentID) {
+        //cerate a notification 
+        await models.Notification.create({
+          text: `${req.user.userName} liked your thread`, 
+          sourceId: currentID, 
+          userId: thread.userId,
+          type: "LIKE", 
+          isSeen: false, 
+        });
+      }
+
     } else if (action === "unlike") {
       const existingLike = await models.Like.findOne({
         where: { threadId, userId: currentID },
@@ -1030,6 +1065,7 @@ controller.show = async (req, res) => {
   res.locals.currentID = ID;
   const requestedPage = req.params.page;
   const blogId = req.params.thread || null;
+  res.locals.requestedPage = requestedPage;
 
   if (requestedPage) {
     if (blogId) {

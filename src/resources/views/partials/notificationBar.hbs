@@ -4,8 +4,8 @@
     {{#if (eq type "COMMENT")}}comment{{/if}}">
     <div class="d-flex justify-content-between align-items-center">
         <!-- Left Section (Notification Content) -->
-        <div class="d-flex flex-column text-center w-75">
-            <div class="ps-4 d-flex justify-content-center align-items-center">
+        <div class="d-flex flex-column text-start w-75">
+            <div class="ps-4 d-flex align-items-center">
                 <strong class="me-1">
                     <a href="/{{sourceUserName}}" class="text-decoration-none text-dark">{{sourceUserName}}</a>
                 </strong>
@@ -19,19 +19,15 @@
         </div>
 
         <!-- Right Section (Action Button) -->
-   
-
-        <a
-            href="#"
-            role="button"
-            class="btn btn-outline-secondary btn-sm ms-3 {{#if isread}}isread{{/if}}"
-            id="{{id}}"
-            aria-pressed="{{#if isFollowed}}true{{else}}false{{/if}}"
-            onclick="seenHandle('{{id}}'); "
+        <button
+            type="button"
+            class="btn btn-outline-secondary btn-sm ms-3 d-flex align-items-center"
+            id="notification-{{id}}"
+            data-notification-id="{{id}}"
+            data-is-seen="{{isSeen}}"
+            onclick="seenHandle('{{id}}');"
         >
             <i class="bi {{#if isSeen}}bi-eye{{else}}bi-eye-slash{{/if}}"></i>
-        </a>
+        </button>
     </div>
 </div>
-
-
