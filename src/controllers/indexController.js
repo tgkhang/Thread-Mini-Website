@@ -1280,7 +1280,10 @@ controller.show = async (req, res) => {
       ],
       raw: true,
     });
-//
+    if (userInfo) {
+      userInfo.isFollowed = userInfo.isFollowed > 0;
+    }
+
     res.locals.userInfo = userInfo;
     //blog
     const blogs = await models.Thread.findAll({

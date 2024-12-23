@@ -9,7 +9,7 @@ const cloudinary = require("cloudinary").v2;
 //handlebar
 const expressHandlebars = require("express-handlebars");
 //port
-const port = process.env.PORT || 4000;
+const port =3000;
 //morgan
 const morgan = require("morgan");
 //session
