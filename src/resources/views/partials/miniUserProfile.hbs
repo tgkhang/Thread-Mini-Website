@@ -1,8 +1,7 @@
 <li
   class="list-group-item d-flex justify-content-between align-items-center shadow-sm rounded mb-2 p-3 hover-card"
-  style="flex-wrap: wrap;"
 >
-  <div class="d-flex align-items-center" style="flex: 1; min-width: 0;">
+  <div class="d-flex align-items-center">
     <img
       src="{{imagePath}}"
       alt="Avatar"
@@ -10,24 +9,20 @@
       style="width: 40px; height: 40px; object-fit: cover; cursor: pointer;"
       onclick="location.href='/{{userName}}'"
     />
-    <div style="min-width: 0; overflow: hidden;">
-      <strong style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-        {{firstName}} {{lastName}}
-      </strong>
-      <br />
-      <small style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-        {{userName}}
-      </small>
+    <div>
+      <strong>{{firstName}} {{lastName}}</strong><br />
+      <small>{{userName}} </small>
     </div>
   </div>
-  <div class="d-flex mt-2 mt-md-0" style="gap: 0.5rem;">
+  <div>
     <a
       href="/{{userName}}"
-      class="btn btn-outline-secondary btn-sm"
+      class="btn btn-outline-secondary btn-sm me-2"
       onclick="event.stopPropagation();"
     >
       View
     </a>
+ 
     <a
       href="#"
       role="button"
@@ -38,28 +33,11 @@
     >
       {{#if isFollowed}}Unfollow{{else}}Follow{{/if}}
     </a>
+
+
   </div>
 </li>
 
-<style>
-  @media (max-width: 576px) {
-    .list-group-item {
-      flex-direction: column;
-      align-items: stretch;
-    }
-    .list-group-item > div.d-flex {
-      justify-content: space-between;
-      align-items: center;
-    }
-    .list-group-item .btn {
-      flex: 1;
-      text-align: center;
-    }
-    .list-group-item .d-flex.mt-2 {
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-  }
-</style>
+
 
 <script src="/js/22127181.js"></script>
