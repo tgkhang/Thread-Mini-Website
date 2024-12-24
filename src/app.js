@@ -16,7 +16,7 @@ const morgan = require("morgan");
 const session=require('express-session');
 const {timeExpectation, formatDate,arrayInclude,eq}= require('./controllers/handlebarsHelper');
 const {checkImageExists,extractPublicIdFromUrl} = require('./controllers/image')
-
+const models = require("./database/models");
 //redis
 const {RedisStore} = require("connect-redis")
 const {createClient}= require('redis');
