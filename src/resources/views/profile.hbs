@@ -27,7 +27,12 @@
                 </a>
             {{/if}}
 
-            <button class="btn btn-outline-secondary">Share Profile</button>
+            <button
+                class="btn btn-outline-secondary"
+                onclick="shareProfile('{{userName}}')"
+            >
+                Share Profile
+            </button>
         </div>
     </div>
     {{/with}}

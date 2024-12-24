@@ -162,7 +162,34 @@ async function follow(userName,id) {
     }
   }
   
-  
+  //share profile
+  function shareProfile(userName) {
+    const host = window.location.origin; 
+    const profileLink = `${host}/${userName}`;
+
+    navigator.clipboard.writeText(profileLink)
+        .then(() => {
+            // notification
+            const notification = document.createElement('div');
+            notification.innerText = "Profile link copied to clipboard!";
+            notification.className = "alert alert-success text-center position-fixed";
+            notification.style.top = "50%";
+            notification.style.left = "50%";
+            notification.style.transform = "translate(-50%, -50%)";
+            notification.style.zIndex = "9999";
+
+            document.body.appendChild(notification);
+            setTimeout(() => {
+                notification.remove();
+            }, 1500);
+        })
+        .catch((error) => {
+            console.error("Failed to copy:", error);
+            alert("Failed to copy the profile link. Please try again.");
+        });
+}
+
+
   //button follow handle
   document.addEventListener("DOMContentLoaded", () => {
     const notificationContainer = document.querySelector("#notificationTabsContent");
