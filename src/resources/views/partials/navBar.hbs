@@ -11,7 +11,11 @@
                 <i class="bi bi-plus-lg fs-4"></i>
             </a>
             <a class="btn btn-sm footer-btn" href="/notifications" role="button">
-                <i class="bi bi-heart fs-4"></i>
+               {{#if hasnoti}} 
+                    <i class="bi bi-heart-fill text-primary fs-4"></i>
+               {{else}}
+                    <i class="bi bi-heart fs-4"></i>
+               {{/if}}
             </a>
             <a class="btn btn-sm footer-btn" href="/profile" role="button">
                 <i class="bi bi-person fs-4"></i>

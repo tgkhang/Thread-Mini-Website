@@ -9,7 +9,6 @@ const fs = require("fs");
 const cloudinary = require("cloudinary").v2;
 
 controller.showHomepage = async (req, res) => {
-  //
   //let ID= req.session.ID;
   let ID = req.user.id;
   res.locals.currentID = ID;

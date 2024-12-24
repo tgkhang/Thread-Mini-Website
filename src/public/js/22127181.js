@@ -163,3 +163,45 @@ async function follow(userName,id) {
   }
   
   
+  //button follow handle
+  document.addEventListener("DOMContentLoaded", () => {
+    const notificationContainer = document.querySelector("#notificationTabsContent");
+
+    notificationContainer.addEventListener("click", async (event) => {
+        const target = event.target.closest(".notification-toggle");
+        if (!target) return;
+
+        const notificationId = target.getAttribute("data-notification-id");
+        const isSeen = target.getAttribute("data-is-seen") === "true";
+
+        try {
+            const action = isSeen ? "unseen" : "seen";
+
+            // Send request to the server
+            const response = await fetch(`/notifications?notiId=${notificationId}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ action }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                const newIsSeen = data.isSeen;
+
+                document
+                    .querySelectorAll(`[data-notification-id="${notificationId}"]`)
+                    .forEach((button) => {
+                        button.setAttribute("data-is-seen", newIsSeen);
+                        button.innerHTML = `<i class="bi ${newIsSeen ? "bi-eye" : "bi-eye-slash"}"></i>`;
+                    });
+            } else {
+                alert("Failed to update notification status. Please try again.");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            alert("An error occurred. Please try again.");
+        }
+    });
+});
