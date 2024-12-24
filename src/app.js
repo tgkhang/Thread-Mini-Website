@@ -99,10 +99,20 @@ app.use(passport.session());
 app.use(flash());
 
 //middleware for session
-app.use((req, res, next) => {
+app.use(async (req, res, next) => {
     console.log("Session ID:", req.session ? req.session.ID : null);
     console.log("Is Authenticated:", req.isAuthenticated());
     res.locals.isLoggedIn = req.isAuthenticated();
+    res.locals.hasnoti=false;
+    if(res.locals.isLoggedIn){
+        const ID = req.user ? req.user.id : null;
+        if(ID){
+            const notificationExists = await models.Notification.findOne({
+                where: { userId: ID , isSeen :false},
+            });
+            res.locals.hasnoti = !!notificationExists; 
+        }
+    }
     next();
 });
 // Cloudinary API
