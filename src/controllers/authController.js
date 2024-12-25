@@ -50,6 +50,9 @@ controller.login = (req, res, next) => {
         });
     })(req, res, next); // Passing req, res, and next to the authenticate middleware
 };
+controller.start = (req,res)=>{
+    res.render('startPage');
+}
 controller.logout = (req, res, next) => {
     // Check if a session exists
     if (!req.session) {
@@ -74,7 +77,7 @@ controller.logout = (req, res, next) => {
         res.clearCookie('connect.sid', { path: '/' });
 
         console.log('User logged out and session destroyed');
-        res.redirect('/login');
+        res.redirect('/startPage');
     });
 };
 
@@ -83,7 +86,7 @@ controller.isLoggedIn = (req, res, next) => {
     if(req.isAuthenticated()) {
         return next();
     }
-    res.redirect(`/login?reqUrl=${req.originalUrl}`);
+    res.redirect(`/start?reqUrl=${req.originalUrl}`);
 }
 
 controller.signup = (req,res) => {

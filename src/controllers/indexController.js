@@ -584,8 +584,31 @@ controller.updateProfile = async (req, res) => {
   console.log("In controller, req.body:", req.body); // Debugging
 
   let imagePath = null;
-
   const { bio, userName, firstName, lastName } = req.body;
+
+  // Check if username is unique
+  if (userName && userName !== req.user.userName) {
+    try {
+      const existingUser = await models.User.findOne({
+        where: { userName: userName, id: { [models.Sequelize.Op.ne]: ID } }, // Exclude current user's ID
+      });
+
+      if (existingUser) {
+        return res.status(400).render("editProfile", {
+          done: false,
+          error: "The username is already taken. Please choose a different one.",
+          userInfo,
+        });
+      }
+    } catch (error) {
+      console.error("Error checking unique username:", error);
+      return res.status(500).render("editProfile", {
+        done: false,
+        error: "An error occurred while validating your username. Please try again.",
+        userInfo,
+      });
+    }
+  }
 
   if (req.file) {
     try {

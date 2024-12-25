@@ -1,0 +1,63 @@
+{{>header}}
+
+<div class="hero-section">
+        <h1 class="hero-title">Welcome to Threads</h1>
+        <p class="hero-subtitle">Join the conversation and share your thoughts with the world.</p>
+        <div>
+            <a href="/login" class="btn btn-primary btn-login">Log In</a>
+            <a href="/registerEmail" class="btn btn-outline-primary btn-register">Register</a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+<footer>
+    <p>&copy; 2024 Threads. All rights reserved.</p>
+</footer>
+
+
+
+<style>
+        body {
+            background-color: #f8f9fa;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .hero-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #212529;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: #6c757d;
+        }
+
+        .btn-login,
+        .btn-register {
+            margin: 0.5rem;
+            padding: 0.75rem 1.5rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem 0;
+            background-color: #f8f9fa;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+</style>

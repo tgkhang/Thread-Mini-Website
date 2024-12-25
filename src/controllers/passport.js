@@ -33,12 +33,20 @@ passport.use('local-login',new LocalTrategy({
     passwordField: 'password',
     passReqToCallback: true// cho phép truền request vào call back để kiểm tra xem userr login chưa
 }, async(req,username,password,done)=>{
-    if(username){
-        username=username.toLowerCase();// lowercase
-    }
+    // if(username){
+    //     username=username.toLowerCase();// lowercase
+    // }
     try{
         if(!req.user){// not login yet
-            let user=await models.User.findOne({where:{userName:username }});
+            //let user=await models.User.findOne({where:{userName:username }});
+            const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(username);
+            const queryCondition = isEmail
+                ? { email: username } 
+                : { userName: username };
+
+            let user = await models.User.findOne({ where: queryCondition });
+
+
             if(!user){ //username not found
                 return done(null, false, req.flash('loginMessage','User does not exist!'));
             }

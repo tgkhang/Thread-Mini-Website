@@ -6,6 +6,7 @@ const models = require("../database/models");
 const controller = require("../controllers/authController");
 const { body, getErrorMessage } = require("../controllers/validator");
 
+router.get('/start',controller.start);
 router.get("/login", controller.show);
 router.post("/login",
   body("username") 
@@ -58,7 +59,6 @@ router.post('/registerEmail',
   },
   controller.registerEmail
 );
-
 
 router.get('/register',controller.tokenRegister);
 
