@@ -132,7 +132,6 @@ cloudinary.config({
 
 app.use('/',require('./routes/authRouter')); /// xác thực rồi mới xử lí user router
 app.use('/',require('./routes/indexRouter'));
-//app.use('/login',require('./routes/loginRouter'))
 
 
 app.use((req,res,next)=>{

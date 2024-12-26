@@ -6,6 +6,14 @@ const models = require("../database/models");
 const controller = require("../controllers/authController");
 const { body, getErrorMessage } = require("../controllers/validator");
 
+router.get('/', (req, res) => {
+  if (!req.isAuthenticated || !req.isAuthenticated()) {
+      return res.redirect('/start');
+  }
+ 
+  res.redirect('/home');
+});
+ 
 router.get('/start',controller.start);
 router.get("/login", controller.show);
 router.post("/login",

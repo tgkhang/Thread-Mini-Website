@@ -576,24 +576,23 @@ controller.updateProfile = async (req, res) => {
   let ID = req.user.id;
   res.locals.currentID = ID;
 
-  const userInfo = {
-    userName: req.user.userName,
-    imagePath: req.user.imagePath || null,
-  };
-
-  console.log("In controller, req.body:", req.body); // Debugging
-
-  let imagePath = null;
   const { bio, userName, firstName, lastName } = req.body;
+  let imagePath = null;
 
   // Check if username is unique
   if (userName && userName !== req.user.userName) {
     try {
       const existingUser = await models.User.findOne({
-        where: { userName: userName, id: { [models.Sequelize.Op.ne]: ID } }, // Exclude current user's ID
+        where: { userName: userName, id: { [models.Sequelize.Op.ne]: ID } }, 
       });
 
       if (existingUser) {
+        const userInfo = await models.User.findOne({
+          attributes: ["id", "firstName", "lastName", "bio", "userName", "imagePath"],
+          where: { id: ID },
+          raw: true,
+        });
+
         return res.status(400).render("editProfile", {
           done: false,
           error: "The username is already taken. Please choose a different one.",
@@ -602,6 +601,13 @@ controller.updateProfile = async (req, res) => {
       }
     } catch (error) {
       console.error("Error checking unique username:", error);
+
+      const userInfo = await models.User.findOne({
+        attributes: ["id", "firstName", "lastName", "bio", "userName", "imagePath"],
+        where: { id: ID },
+        raw: true,
+      });
+
       return res.status(500).render("editProfile", {
         done: false,
         error: "An error occurred while validating your username. Please try again.",
@@ -610,6 +616,7 @@ controller.updateProfile = async (req, res) => {
     }
   }
 
+  // image upload
   if (req.file) {
     try {
       const uploadResult = await cloudinary.uploader.upload(req.file.path, {
@@ -618,12 +625,19 @@ controller.updateProfile = async (req, res) => {
         overwrite: true,
       });
       imagePath = uploadResult.secure_url;
-      fs.unlinkSync(req.file.path);
+      fs.unlinkSync(req.file.path); // Remove temporary file
     } catch (error) {
       console.error("Cloudinary upload failed:", error);
       if (fs.existsSync(req.file.path)) {
         fs.unlinkSync(req.file.path);
       }
+
+      const userInfo = await models.User.findOne({
+        attributes: ["id", "firstName", "lastName", "bio", "userName", "imagePath"],
+        where: { id: ID },
+        raw: true,
+      });
+
       return res.status(500).render("editProfile", {
         done: false,
         error: "Image upload failed. Please try again.",
@@ -631,6 +645,7 @@ controller.updateProfile = async (req, res) => {
       });
     }
   }
+
   const updatedFields = { bio, userName, firstName, lastName };
   if (imagePath) {
     updatedFields.imagePath = imagePath;
@@ -638,9 +653,27 @@ controller.updateProfile = async (req, res) => {
 
   try {
     await models.User.update(updatedFields, { where: { id: ID } });
-    return res.render("editProfile", { done: true });
+
+    // Fetch the updated user information
+    const updatedUserInfo = await models.User.findOne({
+      attributes: ["id", "firstName", "lastName", "bio", "userName", "imagePath"],
+      where: { id: ID },
+      raw: true,
+    });
+
+    return res.render("editProfile", {
+      done: true,
+      userInfo: updatedUserInfo, // Pass the latest user info to the view
+    });
   } catch (error) {
     console.error("Database update failed:", error);
+
+    const userInfo = await models.User.findOne({
+      attributes: ["id", "firstName", "lastName", "bio", "userName", "imagePath"],
+      where: { id: ID },
+      raw: true,
+    });
+
     return res.status(500).render("editProfile", {
       done: false,
       error: "An error occurred while updating your profile.",

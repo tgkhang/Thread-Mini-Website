@@ -77,7 +77,7 @@ controller.logout = (req, res, next) => {
         res.clearCookie('connect.sid', { path: '/' });
 
         console.log('User logged out and session destroyed');
-        res.redirect('/startPage');
+        res.redirect('/start');
     });
 };
 
@@ -86,7 +86,7 @@ controller.isLoggedIn = (req, res, next) => {
     if(req.isAuthenticated()) {
         return next();
     }
-    res.redirect(`/start?reqUrl=${req.originalUrl}`);
+    res.redirect(`/login?reqUrl=${req.originalUrl}`);
 }
 
 controller.signup = (req,res) => {
