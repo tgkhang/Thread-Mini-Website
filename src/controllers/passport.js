@@ -33,9 +33,9 @@ passport.use('local-login',new LocalTrategy({
     passwordField: 'password',
     passReqToCallback: true// cho phép truền request vào call back để kiểm tra xem userr login chưa
 }, async(req,username,password,done)=>{
-    // if(username){
-    //     username=username.toLowerCase();// lowercase
-    // }
+    if(username){
+        username=username.toLowerCase();// lowercase
+    }
     try{
         if(!req.user){// not login yet
             //let user=await models.User.findOne({where:{userName:username }});
@@ -82,6 +82,9 @@ passport.use('local-register',new LocalTrategy({
         }
 
         const username = req.body.username;
+        if (username.length > 20) {
+            return done(null, false, req.flash('registerMessage', 'Username must not exceed 20 characters!'));
+          }
         user = await models.User.findOne({ where: { userName: username } });
         if (user) {
           return done(null, false, req.flash('registerMessage', 'Username already exists!'));
