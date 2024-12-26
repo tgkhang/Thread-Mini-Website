@@ -6,7 +6,7 @@
       src="{{imagePath}}"
       alt="Avatar"
       class="rounded-circle me-3"
-      style="width: 40px; height: 40px; object-fit: cover; cursor: pointer;"
+      style="width: 50px; height: 50px; object-fit: cover; cursor: pointer;"
       onclick="location.href='/{{userName}}'"
     />
     <div class="text-truncate" style="min-width: 0;">
@@ -14,10 +14,10 @@
       <small class="truncate text-muted">{{userName}}</small>
     </div>
   </div>
-  <div class="d-flex align-items-center flex-shrink-0 gap-2">
+  <div class="d-flex align-items-center flex-shrink-0 gap-3">
     <a
       href="/{{userName}}"
-      class="btn btn-outline-secondary btn-sm"
+      class="btn btn-outline-secondary my-2 my-sm-0"
       onclick="event.stopPropagation();"
     >
       View
@@ -26,7 +26,7 @@
     <a
       href="#"
       role="button"
-      class="btn btn-outline-secondary btn-sm {{#if isFollowed}}isFollowed{{/if}}"
+      class="btn btn-outline-secondary my-2 my-sm-0{{#if isFollowed}}isFollowed{{/if}}"
       id="{{userName}}"
       aria-pressed="{{#if isFollowed}}true{{else}}false{{/if}}"
       onclick="followHandle('{{userName}}'); return false;"
@@ -35,24 +35,18 @@
     </a>
   </div>
 </li>
+
+
 <style>
-  /* Truncate long names */
   .truncate {
     white-space: nowrap; /* Prevent text from wrapping */
     overflow: hidden; /* Hide overflow text */
     text-overflow: ellipsis; /* Add ellipsis (...) for truncated text */
   }
-
-  /* Buttons alignment and spacing */
-  .btn-container {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem; /* Add space between buttons */
-  }
-
   .btn-outline-secondary {
     border-radius: 50px;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    padding: 0.65rem 1rem; 
+    font-size: 1rem;
   }
 
   .btn-outline-secondary:hover {
@@ -60,31 +54,48 @@
     color: white;
   }
 
-  /* Ensure avatar and text alignment */
-  .list-group-item {
+
+  .btn-container {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    gap: 1rem;
+    gap: 0.5rem;
+    flex-wrap: nowrap; /* Prevent wrapping */
   }
 
-  /* Ensure buttons stay in a single row */
-  .d-flex {
-    flex-wrap: nowrap;
+  /* Avatar Styling */
+  .rounded-circle {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
   }
 
-  /* Responsive adjustments */
+  /* Adjustments for Mobile Screens */
   @media (max-width: 768px) {
-    .truncate {
-      max-width: 120px; /* Reduce max width for small screens */
+
+
+    .btn-container {
+      gap: 0.3rem; /* Reduce gap between buttons on mobile */
     }
 
-    .btn-outline-secondary {
-      font-size: 0.8rem; /* Adjust button font size */
-      padding: 0.25rem 0.5rem;
+    .rounded-circle {
+      width: 36px;
+      height: 36px; /* Slightly smaller avatar for mobile */
+    }
+
+    .truncate {
+    white-space: nowrap; /* Prevent text from wrapping */
+    overflow: hidden; /* Hide overflow text */
+    text-overflow: ellipsis; /* Add ellipsis (...) for truncated text */
+  }
+
+    .list-group-item {
+      padding: 10px; /* Reduce padding on smaller screens */
     }
   }
 </style>
+
+
+
 
 
 <script src="/js/22127181.js"></script>
