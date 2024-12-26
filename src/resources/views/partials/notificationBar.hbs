@@ -5,14 +5,17 @@
     <div class="d-flex justify-content-between align-items-center">
         <div class="d-flex flex-column text-start w-75">
             <div class="d-flex align-items-center">
-                <strong class="me-1">
-                    <a href="/{{sourceUserName}}" class="text-decoration-none text-dark">{{sourceUserName}}</a>
-                </strong>
-                <p class="mb-0 flex-grow-1">
+
+
+               <p class="mb-0 flex-grow-1">
+                    <strong class="me-1">
+                        <a href="/{{sourceUserName}}" class="text-decoration-none text-dark">{{sourceUserName}}</a>
+                    </strong>
                     {{#if (eq type "FOLLOW")}}started following you{{/if}}
                     {{#if (eq type "LIKE")}}liked your thread{{/if}}
                     {{#if (eq type "COMMENT")}}commented on your thread{{/if}}
                 </p>
+
             </div>
             <p class="text-muted mt-1 mb-0 small">{{timeExpectation createdAt}}</p>
         </div>
