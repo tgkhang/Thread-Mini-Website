@@ -10,11 +10,11 @@
       onclick="location.href='/{{userName}}'"
     />
     <div>
-      <strong>{{firstName}} {{lastName}}</strong><br />
-      <small>{{userName}} </small>
+      <strong class="truncate">{{firstName}} {{lastName}}</strong><br />
+      <small class="truncate">{{userName}}</small>
     </div>
   </div>
-  <div>
+  <div class="btn-container">
     <a
       href="/{{userName}}"
       class="btn btn-outline-secondary btn-sm me-2"
@@ -33,11 +33,32 @@
     >
       {{#if isFollowed}}Unfollow{{else}}Follow{{/if}}
     </a>
-
-
   </div>
 </li>
 
+<style>
+    /* Truncate long names */
+    .truncate {
+        white-space: nowrap; /*prevent the text from wrapping to the next line */
+        overflow: hidden; /* Hide any overflow text */
+        text-overflow: ellipsis; /* ellipsis (...) to the truncated text */
+        max-width: 150px; 
+    }
+
+    /* Responsive adjustments for small screens */
+    @media (max-width: 768px) {
+        .truncate {
+            max-width: 100px; /* Reduce the width on smaller screens */
+        }
+    }
+
+    /* Buttons alignment */
+    .btn-container {
+        display: flex;
+        align-items: center;
+        gap: 4px; 
+    }
+</style>
 
 
 <script src="/js/22127181.js"></script>
