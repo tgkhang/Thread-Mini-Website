@@ -1,7 +1,7 @@
 <li
   class="list-group-item d-flex justify-content-between align-items-center shadow-sm rounded mb-2 p-3 hover-card"
 >
-  <div class="d-flex align-items-center">
+  <div class="d-flex align-items-center flex-grow-1">
     <img
       src="{{imagePath}}"
       alt="Avatar"
@@ -9,20 +9,20 @@
       style="width: 40px; height: 40px; object-fit: cover; cursor: pointer;"
       onclick="location.href='/{{userName}}'"
     />
-    <div>
-      <strong class="truncate">{{firstName}} {{lastName}}</strong><br />
-      <small class="truncate">{{userName}}</small>
+    <div class="text-truncate" style="min-width: 0;">
+      <strong class="truncate d-block">{{firstName}} {{lastName}}</strong>
+      <small class="truncate text-muted">{{userName}}</small>
     </div>
   </div>
-  <div class="btn-container">
+  <div class="d-flex align-items-center flex-shrink-0 gap-2">
     <a
       href="/{{userName}}"
-      class="btn btn-outline-secondary btn-sm me-2"
+      class="btn btn-outline-secondary btn-sm"
       onclick="event.stopPropagation();"
     >
       View
     </a>
- 
+
     <a
       href="#"
       role="button"
@@ -35,29 +35,55 @@
     </a>
   </div>
 </li>
-
 <style>
-    /* Truncate long names */
+  /* Truncate long names */
+  .truncate {
+    white-space: nowrap; /* Prevent text from wrapping */
+    overflow: hidden; /* Hide overflow text */
+    text-overflow: ellipsis; /* Add ellipsis (...) for truncated text */
+  }
+
+  /* Buttons alignment and spacing */
+  .btn-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem; /* Add space between buttons */
+  }
+
+  .btn-outline-secondary {
+    border-radius: 50px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  .btn-outline-secondary:hover {
+    background-color: #6c757d;
+    color: white;
+  }
+
+  /* Ensure avatar and text alignment */
+  .list-group-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  /* Ensure buttons stay in a single row */
+  .d-flex {
+    flex-wrap: nowrap;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
     .truncate {
-        white-space: nowrap; /*prevent the text from wrapping to the next line */
-        overflow: hidden; /* Hide any overflow text */
-        text-overflow: ellipsis; /* ellipsis (...) to the truncated text */
-        max-width: 150px; 
+      max-width: 120px; /* Reduce max width for small screens */
     }
 
-    /* Responsive adjustments for small screens */
-    @media (max-width: 768px) {
-        .truncate {
-            max-width: 100px; /* Reduce the width on smaller screens */
-        }
+    .btn-outline-secondary {
+      font-size: 0.8rem; /* Adjust button font size */
+      padding: 0.25rem 0.5rem;
     }
-
-    /* Buttons alignment */
-    .btn-container {
-        display: flex;
-        align-items: center;
-        gap: 4px; 
-    }
+  }
 </style>
 
 
