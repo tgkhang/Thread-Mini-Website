@@ -70,6 +70,31 @@
   }
 
   /* Adjustments for Mobile Screens */
+  @media (max-width: 768px) {
+    .btn-outline-secondary {
+      font-size: 0.9rem; /* Slightly smaller font size for mobile */
+      padding: 0.4rem 1.2rem; /* Smaller padding for mobile buttons */
+      flex-shrink: 0; /* Prevent shrinking of buttons */
+    }
+    .btn-container {
+      gap: 0.3rem; 
+    }
+
+    .rounded-circle {
+      width: 36px;
+      height: 36px; /* Slightly smaller avatar for mobile */
+    }
+
+    .truncate {
+    white-space: nowrap; /* Prevent text from wrapping */
+    overflow: hidden; /* Hide overflow text */
+    text-overflow: ellipsis; /* Add ellipsis (...) for truncated text */
+  }
+
+    .list-group-item {
+      padding: 10px; /* Reduce padding on smaller screens */
+    }
+  }
 </style>
 
 
