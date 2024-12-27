@@ -88,7 +88,11 @@ router.post('/register',
     let message = getErrorMessage(req);
     if (message) {
       console.log(message)
-      return res.render("signup", { registerMessage: message ,email: req.body.email || '' ,username: req.body.userName });
+      return res.render("signup", { 
+        registerMessage: message, 
+        email: req.body.email || '', 
+        userName: req.body.username || '' 
+      });  
     }
     next();
   },
