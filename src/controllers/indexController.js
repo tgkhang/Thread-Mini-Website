@@ -8,6 +8,12 @@ const Op = sequelize.Op;
 const fs = require("fs");
 const cloudinary = require("cloudinary").v2;
 
+//xss check
+const DOMPurify = require('dompurify');
+const { JSDOM } = require('jsdom');
+const window = new JSDOM('').window;
+const purify = DOMPurify(window);
+
 controller.showHomepage = async (req, res) => {
   //let ID= req.session.ID;
   let ID = req.user.id;
@@ -247,11 +253,10 @@ controller.loadMoreBlogs = async (req, res) => {
 
 controller.showSearchResult = async (req, res) => {
   let ID = req.user.id;
-  //console.log(ID);
   res.locals.currentID = ID;
   let keyword = req.query.keyword || "";
 
-  //find all user follow by current user
+  // Find all users followed by the current user
   const followedUsers = await models.Follow.findAll({
     attributes: ["followingId"],
     where: {
@@ -260,30 +265,41 @@ controller.showSearchResult = async (req, res) => {
     raw: true,
   });
 
-  //console.log(followedUsers)
   const followingIds = followedUsers.map((follow) => follow.followingId);
-  console.log(followingIds);
 
+  // Search options with additional filtering for firstName and lastName
   const options = {
     attributes: ["id", "firstName", "lastName", "userName", "imagePath"],
     where: {
       [Op.and]: [{ id: { [Op.ne]: ID } }],
     },
-    limit: 5,
+    limit: 10, // Adjusted limit to return up to 10 results
     raw: true,
   };
 
-  if (keyword.trim() != "") {
-    options.where.userName = {
-      [Op.iLike]: `%${keyword}%`,
-    };
+  if (keyword.trim() !== "") {
+    options.where[Op.or] = [
+      { userName: { [Op.iLike]: `%${keyword}%` } },
+      { firstName: { [Op.iLike]: `%${keyword}%` } },
+      { lastName: { [Op.iLike]: `%${keyword}%` } },
+      {
+        [Op.and]: [
+          { firstName: { [Op.iLike]: `%${keyword.split(" ")[0]}%` } },
+          { lastName: { [Op.iLike]: `%${keyword.split(" ")[1] || ""}%` } },
+        ],
+      },
+    ];
   }
 
-  let suggestAccounts = await models.User.findAll(options);
-  res.locals.suggestAccounts = suggestAccounts;
+  try {
+    const suggestAccounts = await models.User.findAll(options);
+    res.locals.suggestAccounts = suggestAccounts;
 
-  console.log(followingIds);
-  res.render("search", { followingIds });
+    res.render("search", { followingIds });
+  } catch (error) {
+    console.error("Error fetching search results:", error);
+    res.status(500).send("Internal server error");
+  }
 };
 
 controller.showSearchpage = async (req, res) => {
@@ -686,7 +702,7 @@ controller.createThread = async (req, res) => {
   const ID = req.user.id;
   res.locals.currentID = ID;
 
-  const { text } = req.body; // Get text from the form
+  let { text } = req.body; // Get text from the form
   console.log("Request Body here:", req.body); // Debugging
 
   const userInfo = {
@@ -703,11 +719,40 @@ controller.createThread = async (req, res) => {
       userInfo,
     });
   }
+  
+  //security check
+  text = purify.sanitize(text.trim());
+  if (text.length > 1000) {
+    return res.status(400).render("createThread", {
+      done: false,
+      error: "Text exceeds the maximum allowed length.",
+      userInfo,
+    });
+  }
 
   let imagePath = null;
 
   // Handle image upload
   if (req.file) {
+
+    // const allowedTypes = [
+    //   'image/png',
+    //   'image/jpeg',
+    //   'image/jpg',
+    //   'image/gif',
+    //   'image/bmp',
+    //   'image/webp',
+    //   'image/tiff',
+    //   'image/x-icon',
+    // ];
+    // if (!allowedTypes.includes(req.file.mimetype)) {
+    //   return res.status(400).render("createThread", {
+    //     done: false,
+    //     error: "Invalid file type. Only images are allowed.",
+    //     userInfo,
+    //   });
+    // }
+
     const localImagePath = req.file.path;
 
     try {
@@ -902,7 +947,7 @@ controller.createComment = async (req, res) => {
   res.locals.currentID = ID;
 
   const threadId = req.params.threadId;
-  const { text } = req.body;
+  let { text } = req.body;
   const userName = req.params.userName;
 
   const userInfo = {
@@ -916,6 +961,18 @@ controller.createComment = async (req, res) => {
       done: false,
       error: "Text cannot be empty",
       userInfo, // Pass user info to the view
+    });
+  }
+
+  // Sanitize input
+  text = purify.sanitize(text.trim());
+
+  //prevent ddos
+  if (text.length > 1000) {
+    return res.status(400).render("blogDetail", {
+      done: false,
+      error: "Text exceeds maximum allowed length",
+      userInfo,
     });
   }
 
