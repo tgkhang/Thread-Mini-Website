@@ -269,7 +269,17 @@ controller.showSearchResult = async (req, res) => {
 
   // Search options with additional filtering for firstName and lastName
   const options = {
-    attributes: ["id", "firstName", "lastName", "userName", "imagePath"],
+    attributes: ["id", "firstName", "lastName", "userName", "imagePath",
+      [
+        sequelize.literal(
+          `CASE WHEN EXISTS (
+            SELECT 1 FROM "Follows"
+            WHERE "Follows"."followerId" = ${ID} AND "Follows"."followingId" = "User"."id"
+          ) THEN true ELSE false END`
+        ),
+        "isFollowed",
+      ],
+    ],
     where: {
       [Op.and]: [{ id: { [Op.ne]: ID } }],
     },
