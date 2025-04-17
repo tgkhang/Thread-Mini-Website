@@ -14,10 +14,10 @@
     "dialect": "mysql"
   },
   "production": {
-    "username": "thread_2nb7_user",
-    "password": "2JdPjePYuk394CFPPKjT5M9AaF2qOWOh",
-    "database": "thread_2nb7",
-    "host": "dpg-ctja8bbtq21c73e1ee5g-a.singapore-postgres.render.com",
+    "username": "thread_xeib_user",
+    "password": "DBBIqGsXAnJic2oj3WICFyQhyXEcqKgb",
+    "database": "thread_xeib",
+    "host": "dpg-d00doqhr0fns73e63dg0-a.singapore-postgres.render.com",
     "dialect": "postgres",
     "dialectOptions": {
       "ssl": {
