@@ -117,10 +117,11 @@ app.use(async (req, res, next) => {
 });
 // Cloudinary API
 cloudinary.config({ 
-    cloud_name: 'dlilw5qcv', 
-    api_key: '128934476692575', 
-    api_secret: 'qQ9MyvKOZDOq-rpK4mwQ_-Sud7c' 
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
+    api_key: process.env.CLOUDINARY_API_KEY, 
+    api_secret: process.env.CLOUDINARY_API_SECRET,
   });
+
 
 // app.get("/createTable", (req, res) => {
 //     let models = require("./database/models");
