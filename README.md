@@ -1,8 +1,6 @@
 # HCMUS-CSC13008-Thread-Mini-Website
 
-A thread-based discussion platform built with Node.js, Express, and PostgreSQL.
-
-The user interface is designed and optimized for mobile browsers.
+A mobile-optimized social network web application that allows users to post threads with images, add comments, follow other users, like content, view threads, browse and search profiles.
 
 ## Demo
 
