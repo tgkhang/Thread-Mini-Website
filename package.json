@@ -5,7 +5,14 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon --inspect src/app.js",
-    "watch": "sass --watch src/resources/scss/app.scss:src/public/css/app.css"
+    "start:prod": "node src/app.js",
+    "start2": "nodemon --inspect src/app2.js",
+    "watch": "sass --watch src/resources/scss/app.scss:src/public/css/app.css",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f app",
+    "setup:db": "cd src/database && npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all"
   },
   "author": "",
   "license": "ISC",
@@ -33,7 +40,8 @@
     "pg-hstore": "^2.3.4",
     "redis": "^4.7.0",
     "sass": "^1.81.0",
-    "sequelize": "^6.37.5"
+    "sequelize": "^6.37.5",
+    "sequelize-cli": "^6.6.2"
   },
   "devDependencies": {
     "morgan": "^1.10.0",
