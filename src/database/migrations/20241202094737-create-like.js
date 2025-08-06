@@ -9,8 +9,23 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      haha: {
-        type: Sequelize.STRING
+      threadId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Threads',
+          key: 'id',
+        },
+        onDelete: 'CASCADE',
+      },
+      userId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Users',
+          key: 'id',
+        },
+        onDelete: 'CASCADE',
       },
       createdAt: {
         allowNull: false,

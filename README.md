@@ -1,31 +1,76 @@
-# HCMUS-CSC13008-Thread-Mini-Website
+# Thread Mini Website
 
 A mobile-optimized social network web application that allows users to post threads with images, add comments, follow other users, like content, view threads, browse and search profiles.
 
-## 🚀 Quick Start with Docker (Recommended)
+## 🚀 Quick Start
 
-The easiest way to run this project is using Docker Compose:
+### Prerequisites
+- Docker and Docker Compose installed
+- Git
+
+### One Command Setup
 
 ```bash
-# Build and start all services
-docker-compose up -d --build
+docker-compose up --build
+```
 
-# Run all database migrations
+### Clean Build (No Cache)
+
+```bash
+# For a completely fresh build without cache
+docker-compose build --no-cache
+docker-compose up
+
+# To completely reset everything including database data
+docker-compose down -v
+docker-compose up --build
+```
+
+The application will:
+- Build and start all services (PostgreSQL, Redis, App)
+- Automatically run database migrations
+- Be available at http://localhost:4000
+
+### Database Seeding (Required for test data)
+
+After starting the containers, run these commands to seed the database with test data:
+
+```bash
+# Run all database migrations (if not already done)
 docker exec thread_app npx sequelize-cli db:migrate
 
 # Seed the database with all test data (users, threads, follows, likes, comments, notifications)
 docker exec thread_app npx sequelize-cli db:seed:all
 ```
 
-Access the application at: **http://localhost:4000**
+To reset the database and reseed:
 
-## Demo
+```bash
+# Remove all seeded data
+docker exec thread_app npx sequelize-cli db:seed:undo:all
 
-Live demo: [Demo Website](https://hcmus-csc13008-thread-mini-website.onrender.com/)
+# Add fresh seed data
+docker exec thread_app npx sequelize-cli db:seed:all
+```
+
+### Configuration
+
+1. **Environment Setup**
+   ```bash
+   # Copy and edit the environment file
+   cp .env.example .env
+   ```
+
+2. **Update your Cloudinary credentials in .env**
+   ```
+   CLOUDINARY_CLOUD_NAME=your_cloud_name
+   CLOUDINARY_API_KEY=your_api_key
+   CLOUDINARY_API_SECRET=your_api_secret
+   ```
 
 ## Default User Accounts
 
-You can use the following test accounts after running the setup:
+You can use the following test accounts:
 
 | Username    | Password       | Description |
 | ----------- | -------------- | ----------- |
@@ -33,140 +78,87 @@ You can use the following test accounts after running the setup:
 | bmunt1      | sY2<@jTV       | Test User 2 |
 | dproudlock2 | gC6$#\`Py(\\Z7 | Test User 3 |
 
-## Setup Instructions
+## Useful Commands
 
-### 🐳 Docker Setup (Recommended)
+```bash
+# Start in background
+docker-compose up --build -d
 
-1. **Prerequisites**: Docker Desktop installed and running
+# View logs
+docker-compose logs -f app
 
-2. **Quick Start**:
+# Stop all services
+docker-compose down
 
-   ```bash
-   # Clone the repository
-   git clone <repository-url>
-   cd HCMUS-CSC13008-Thread-Mini-Website
+# Restart just the app
+docker-compose restart app
 
-   # Build and start all services (PostgreSQL, Redis, Node.js app)
-   docker-compose up -d --build
+# Using npm scripts (alternative)
+npm run setup    # Start everything in background
+npm run down     # Stop all services
+npm run logs     # View app logs
+```
 
-   # Run all database migrations
-   docker exec thread_app npx sequelize-cli db:migrate
-
-   # Seed the database with all test data (users, threads, follows, likes, comments, notifications)
-   docker exec thread_app npx sequelize-cli db:seed:all
-   ```
-
-3. **Access**: Application available at http://localhost:4000
-
-4. **Stop Services**:
-   ```bash
-   docker-compose down
-   ```
-
-### 🔧 Manual Setup (Without Docker)
+## Manual Setup (Without Docker)
 
 ### Prerequisites
-
 - Node.js (v18+)
 - PostgreSQL (v13+)
 - Redis (v6+)
 
-### Installation Steps
-
-1. Clone the repository and install dependencies
-
+### Steps
+1. Clone and install dependencies
    ```bash
    git clone <repository-url>
    cd HCMUS-CSC13008-Thread-Mini-Website
    npm install
    ```
 
-2. Database Configuration
-
-   - Create a new PostgreSQL database named `thread`
-   - Create a Redis instance
-   - Create `.env` file based on `.env.example`
-
-3. Set up the database
-
+2. Configure environment
    ```bash
-   # Run migrations to create tables
-   npx sequelize-cli db:migrate
+   cp .env.example .env
+   # Edit .env with your database and service credentials
+   ```
 
-   # Seed the database with all test data (users, threads, follows, likes, comments, notifications)
+3. Setup database
+   ```bash
+   cd src/database
+   npx sequelize-cli db:migrate
    npx sequelize-cli db:seed:all
    ```
 
-4. Start the application
-
+4. Start application
    ```bash
-   # With Redis (production mode)
    npm start
-
-   # Without Redis (development mode)
-   npm run start2
    ```
 
-5. Access the application at `http://localhost:3000`
+## Technology Stack
 
-### Docker Services
-
-This project includes the following containerized services:
-
-- **PostgreSQL 15**: Database server (port 5432)
-- **Redis 7**: Session storage and caching (port 6379)
-- **Node.js 18**: Main application server (port 4000)
-
-All services are orchestrated using Docker Compose with proper health checks and dependencies.
+- **Backend**: Node.js, Express.js
+- **Database**: PostgreSQL with Sequelize ORM  
+- **Cache/Sessions**: Redis
+- **File Storage**: Cloudinary
+- **Authentication**: Passport.js with local strategy
+- **Template Engine**: Handlebars
+- **Containerization**: Docker & Docker Compose
 
 ## Project Structure
 
 - `/src` - Source code
   - `/controllers` - Application controllers
-    - `authController.js` - Authentication logic
-    - `indexController.js` - Main page controllers
-    - `jwt.js` - JWT token handling
-    - `mail.js` - Email functionality
-    - `passport.js` - Passport.js configuration
-    - `validator.js` - Input validation
-  - `/database` - Database configuration and models
-    - `/config` - Database connection configuration
-    - `/migrations` - Database migrations
-    - `/models` - Sequelize models
-    - `/seeders` - Seed data for the database
-    - `db.js` - Database initialization
+  - `/database` - Database configuration, models, migrations, seeders
   - `/routes` - Express routes
-    - `authRouter.js` - Authentication routes
-    - `indexRouter.js` - Main application routes
   - `/public` - Static assets
-  - `/resources` - Frontend resources
-  - `/uploads` - File upload directory
-  - `app.js` - Main application entry point (with Redis)
-  - `app2.js` - Development entry point (without Redis)
-  - `setup-db.js` - Database setup script for Docker
+  - `/resources` - Frontend resources (views, SCSS)
+  - `app.js` - Main application entry point
 
-## Technologies Used
+## Environment Variables
 
-- **Backend**:
-  - Node.js + Express.js
-  - Passport.js (authentication)
-  - JWT (JSON Web Tokens)
-  - Sequelize ORM
-  - Bcrypt (password hashing)
-- **Frontend**:
-  - Express-Handlebars (templating)
-  - SCSS/Sass
-  - Bootstrap Icons
-- **Database & Storage**:
-  - PostgreSQL
-  - Redis (session management)
-  - Cloudinary (image storage)
-- **Infrastructure**:
-  - Docker & Docker Compose
-  - Health checks and service dependencies
-- **Others**:
-  - Nodemon (development)
-  - DOMPurify (security)
-  - Express-validator
-  - Multer (file uploads)
-  - Node-Mailjet (email)
+Configure these in your `.env` file:
+
+- `CLOUDINARY_CLOUD_NAME` - Your Cloudinary cloud name
+- `CLOUDINARY_API_KEY` - Your Cloudinary API key  
+- `CLOUDINARY_API_SECRET` - Your Cloudinary API secret
+- `SESSION_SECRET` - Secret key for sessions
+- `MAILJET_API_KEY` - (Optional) For email functionality
+- `MAILJET_SECRET_KEY` - (Optional) For email functionality

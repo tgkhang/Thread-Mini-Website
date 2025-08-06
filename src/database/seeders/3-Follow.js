@@ -4,17 +4,17 @@
 module.exports = {
   async up (queryInterface, Sequelize) {
     const items = [{
-      "followerId": 6,
-      "followingId": 19
+      "followerId": 1,
+      "followingId": 2
     }, {
-      "followerId": 7,
+      "followerId": 2,
       "followingId": 5
     }, {
       "followerId": 1,
       "followingId": 4
     }, {
-      "followerId": 19,
-      "followingId": 18
+      "followerId": 3,
+      "followingId": 8
     }, {
       "followerId": 4,
       "followingId": 11

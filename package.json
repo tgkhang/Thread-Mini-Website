@@ -6,13 +6,11 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon --inspect src/app.js",
     "start:prod": "node src/app.js",
-    "start2": "nodemon --inspect src/app2.js",
-    "watch": "sass --watch src/resources/scss/app.scss:src/public/css/app.css",
-    "docker:build": "docker-compose build",
-    "docker:up": "docker-compose up -d",
-    "docker:down": "docker-compose down",
-    "docker:logs": "docker-compose logs -f app",
-    "setup:db": "cd src/database && npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all"
+    "dev": "docker-compose up --build",
+    "setup": "docker-compose up --build -d && echo 'Application is starting... Visit http://localhost:4000 in a few moments'",
+    "down": "docker-compose down",
+    "logs": "docker-compose logs -f app",
+    "watch": "sass --watch src/resources/scss/app.scss:src/public/css/app.css"
   },
   "author": "",
   "license": "ISC",

@@ -9,8 +9,35 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      name: {
-        type: Sequelize.STRING
+      text: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      sourceId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Users',
+          key: 'id',
+        },
+        onDelete: 'CASCADE',
+      },
+      userId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Users',
+          key: 'id',
+        },
+        onDelete: 'CASCADE',
+      },
+      isSeen: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+      },
+      type: {
+        type: Sequelize.ENUM('LIKE', 'FOLLOW', 'COMMENT'),
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,
