@@ -41,7 +41,9 @@
     "redis": "^4.7.0",
     "sass": "^1.81.0",
     "sequelize": "^6.37.5",
-    "sequelize-cli": "^6.6.2"
+    "sequelize-cli": "^6.6.2",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
     "morgan": "^1.10.0",

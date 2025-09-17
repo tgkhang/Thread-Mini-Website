@@ -20,10 +20,6 @@ const {
   arrayInclude,
   eq,
 } = require("./controllers/handlebarsHelper");
-const {
-  checkImageExists,
-  extractPublicIdFromUrl,
-} = require("./controllers/image");
 const models = require("./database/models");
 //redis
 const { RedisStore } = require("connect-redis");
@@ -40,6 +36,9 @@ let redisClient = createClient({
   url: process.env.REDIS_URL,
 });
 redisClient.connect().catch(console.error);
+
+//swagger documentation
+const { specs, swaggerUi } = require("./config/swagger");
 
 //passport
 const passport = require("./controllers/passport");
@@ -138,6 +137,17 @@ cloudinary.config({
 app.get("/health", (req, res) => {
   res.status(200).json({ status: "OK", timestamp: new Date().toISOString() });
 });
+
+// Swagger API documentation
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(specs, {
+    explorer: true,
+    customCss: ".swagger-ui .topbar { display: none }",
+    customSiteTitle: "Thread Mini Website API Documentation",
+  })
+);
 
 app.use("/", require("./routes/authRouter")); /// xác thực rồi mới xử lí user router
 app.use("/", require("./routes/indexRouter"));

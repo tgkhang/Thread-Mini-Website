@@ -9,7 +9,7 @@ const cloudinary = require("cloudinary").v2;
 //handlebar
 const expressHandlebars = require("express-handlebars");
 //port
-const port = 3000;
+const port = process.env.PORT || 3000;
 //morgan
 const morgan = require("morgan");
 //session
@@ -20,10 +20,6 @@ const {
   arrayInclude,
   eq,
 } = require("./controllers/handlebarsHelper");
-const {
-  checkImageExists,
-  extractPublicIdFromUrl,
-} = require("./controllers/image");
 const models = require("./database/models");
 //redis
 // const {RedisStore} = require("connect-redis")
@@ -40,6 +36,9 @@ const models = require("./database/models");
 //     url: process.env.REDIS_URL
 // })
 // redisClient.connect().catch(console.error)
+
+//swagger documentation
+const { specs, swaggerUi } = require("./config/swagger");
 
 //passport
 const passport = require("./controllers/passport");
@@ -84,14 +83,14 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
   session({
-    secret: "S3cret",
-    //secret:process.env.SESSION_SECRET,
-    //store: redisStore,
+    secret: process.env.SESSION_SECRET || "dev-secret-change-in-production",
+    //store: redisStore, // Disabled for development
     resave: false,
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
       maxAge: 20 * 60 * 1000, //20min
+      secure: false, // Set to true in production with HTTPS
     },
   })
 );
@@ -133,6 +132,26 @@ cloudinary.config({
 //         res.send("tables created");
 //     });
 // });
+
+// Health check endpoint for development
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "OK",
+    environment: "development",
+    timestamp: new Date().toISOString(),
+  });
+});
+
+// Swagger API documentation
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(specs, {
+    explorer: true,
+    customCss: ".swagger-ui .topbar { display: none }",
+    customSiteTitle: "Thread Mini Website API Documentation (Development)",
+  })
+);
 
 app.use("/", require("./routes/authRouter")); /// xác thực rồi mới xử lí user router
 app.use("/", require("./routes/indexRouter"));
