@@ -64,66 +64,6 @@ module.exports = {
         isSeen: false,
         type: "LIKE",
       },
-      {
-        text: "pellentesque quisque porta volutpat erat quisque erat eros viverra eget congue",
-        userId: 20,
-        isSeen: true,
-        type: "COMMENT",
-      },
-      {
-        text: "consequat in consequat ut nulla sed accumsan felis ut at dolor quis odio consequat",
-        userId: 17,
-        isSeen: true,
-        type: "FOLLOW",
-      },
-      {
-        text: "non ligula pellentesque ultrices phasellus id sapien in sapien iaculis congue vivamus metus arcu",
-        userId: 17,
-        isSeen: false,
-        type: "COMMENT",
-      },
-      {
-        text: "et ultrices posuere cubilia curae duis faucibus accumsan odio",
-        userId: 18,
-        isSeen: true,
-        type: "LIKE",
-      },
-      {
-        text: "ut at dolor quis odio consequat",
-        userId: 13,
-        isSeen: false,
-        type: "LIKE",
-      },
-      {
-        text: "id nisl venenatis lacinia aenean sit amet justo morbi ut odio",
-        userId: 5,
-        isSeen: false,
-        type: "COMMENT",
-      },
-      {
-        text: "diam neque vestibulum eget vulputate ut ultrices vel augue vestibulum",
-        userId: 18,
-        isSeen: false,
-        type: "FOLLOW",
-      },
-      {
-        text: "vulputate nonummy maecenas tincidunt lacus at velit vivamus",
-        userId: 5,
-        isSeen: false,
-        type: "LIKE",
-      },
-      {
-        text: "lacus at turpis donec posuere metus vitae ipsum aliquam non mauris",
-        userId: 7,
-        isSeen: false,
-        type: "FOLLOW",
-      },
-      {
-        text: "accumsan felis ut at dolor quis odio consequat varius integer ac leo pellentesque ultrices mattis",
-        userId: 10,
-        isSeen: true,
-        type: "COMMENT",
-      },
     ];
 
     

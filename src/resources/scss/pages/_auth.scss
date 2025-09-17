@@ -1,0 +1,39 @@
+// Authentication pages styles (login, signup, etc.)
+.auth {
+  &__container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+
+  &__form {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  &__title {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  &__field {
+    margin-bottom: 20px;
+  }
+
+  &__submit {
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  &__link {
+    text-align: center;
+    margin-top: 20px;
+  }
+}
+
+.auth-page-container {
+  min-height: 100vh;
+  padding-top: 56px;
+}

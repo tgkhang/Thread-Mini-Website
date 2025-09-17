@@ -5,14 +5,12 @@
       <img
         src="{{userImage}}"
         alt="Avatar"
-        class="rounded-circle me-3"
-        style="width: 40px; height: 40px; object-fit: cover; cursor: pointer;"
+        class="avatar avatar--small avatar--round avatar--clickable rounded-circle me-3"
         onclick="location.href='/{{userName}}'"
       />
       <div>
         <h6
-          class="card-title mb-0 fw-bold"
-          style="cursor: pointer;"
+          class="card-title mb-0 fw-bold text--clickable"
           onclick="location.href='/{{userName}}'"
         >
           {{userName}}
@@ -25,11 +23,10 @@
     {{!-- image --}}
     {{#if threadImage}}
     <div class="mb-3">
-      <img 
-        src="{{threadImage}}" 
-        alt="Thread Image" 
-        class="img-fluid rounded" 
-        style="max-height: 300px; object-fit: cover;" 
+      <img
+        src="{{threadImage}}"
+        alt="Thread Image"
+        class="blog__image img-fluid rounded"
       />
     </div>
 

@@ -10,7 +10,9 @@
     "setup": "docker-compose up --build -d && echo 'Application is starting... Visit http://localhost:4000 in a few moments'",
     "down": "docker-compose down",
     "logs": "docker-compose logs -f app",
-    "watch": "sass --watch src/resources/scss/app.scss:src/public/css/app.css"
+    "watch": "sass --watch src/resources/scss/main.scss:src/public/css/main.css",
+    "build:css": "sass src/resources/scss/main.scss:src/public/css/main.css",
+    "build:css:prod": "sass src/resources/scss/main.scss:src/public/css/main.css --style=compressed"
   },
   "author": "",
   "license": "ISC",

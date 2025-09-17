@@ -1,0 +1,18 @@
+// Search page specific styles
+.search {
+  &__container {
+    max-width: 500px;
+  }
+
+  &__form {
+    margin-bottom: 20px;
+  }
+
+  &__results {
+    margin-top: 20px;
+  }
+}
+
+.search-form-container {
+  max-width: 500px;
+}

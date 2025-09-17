@@ -5,7 +5,7 @@ module.exports = {
   async up (queryInterface, Sequelize) {
     const items = [{
       "userId": 9,
-      "threadId": 16,
+      "threadId": 6,
       "text": "Cras mi pede, malesuada in, imperdiet et, commodo vulputate, justo. In blandit ultrices enim. Lorem ipsum dolor sit amet, consectetuer adipiscing elit."
     }, {
       "userId": 4,

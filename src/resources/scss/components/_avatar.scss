@@ -1,0 +1,40 @@
+// Avatar and profile image styles
+.avatar {
+  &--small {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    cursor: pointer;
+  }
+
+  &--medium {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+  }
+
+  &--small-medium {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+  }
+
+  &--large {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+  }
+
+  &--round {
+    border-radius: 50%;
+  }
+
+  &--clickable {
+    cursor: pointer;
+  }
+}
+
+.user-avatar {
+  border: 2px solid #dee2e6;
+  border-radius: 50%;
+}

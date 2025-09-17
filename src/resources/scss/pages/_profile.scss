@@ -1,0 +1,31 @@
+// Profile page specific styles
+.profile {
+  &__header {
+    padding: 20px 0;
+  }
+
+  &__avatar {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
+  &__tabs {
+    margin-top: 20px;
+  }
+
+  &__content {
+    padding-top: 20px;
+  }
+}
+
+.guest-profile {
+  &__header {
+    padding: 20px 0;
+  }
+
+  &__actions {
+    margin-top: 15px;
+  }
+}

@@ -1,7 +1,7 @@
 {{>header}}
 <main class="col-md-5 d-flex flex-column align-items-center pt-5 mt-5 container">
     <!-- Tabs -->
-    <ul class="nav nav-tabs mb-4 sticky-top shadow" id="homeTabs" role="tablist" style="z-index: 1020; top: 60px; background-color: white; border: none;">
+    <ul class="nav nav-tabs mb-4 sticky-top shadow sticky-nav" id="homeTabs" role="tablist">
         <li class="nav-item" role="presentation">
             <button class="nav-link active text-dark fw-bold" id="for-you-tab" data-bs-toggle="tab" data-bs-target="#for-you" type="button" role="tab" aria-controls="for-you" aria-selected="true">For You</button>
         </li>
@@ -40,37 +40,6 @@
 
 
 {{>navBar}}
-
-<style>
-   
-.nav-tabs {
-    border-bottom: none; 
-    background-color: transparent; 
-}
-
-.nav-tabs .nav-link {
-    border: none; 
-    border-radius: 0; /* Make tabs flat */
-    font-weight: bold; 
-    padding: 10px 15px; 
-    transition: background-color 0.3s ease, color 0.3s ease; 
-}
-
-.nav-tabs .nav-link.active {
-    color: #007bff; 
-    border-bottom: 3px solid #007bff; 
-    background-color: transparent; 
-}
-
-.nav-tabs .nav-link:hover {
-    background-color: rgba(0, 123, 255, 0.1); 
-    color: #0056b3; 
-}
-
-.sticky-top {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-</style>
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {

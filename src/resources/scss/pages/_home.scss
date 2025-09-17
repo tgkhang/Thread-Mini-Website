@@ -1,0 +1,42 @@
+// Home page specific styles
+.home {
+  &__tabs {
+    z-index: 1020;
+    top: 60px;
+    background-color: white;
+    border: none;
+  }
+
+  &__content {
+    margin-bottom: 60px;
+  }
+}
+
+// Home page nav tabs override
+.nav-tabs {
+  border-bottom: none;
+  background-color: transparent;
+
+  .nav-link {
+    border: none;
+    border-radius: 0;
+    font-weight: bold;
+    padding: 10px 15px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+
+    &.active {
+      color: #007bff;
+      border-bottom: 3px solid #007bff;
+      background-color: transparent;
+    }
+
+    &:hover {
+      background-color: rgba(0, 123, 255, 0.1);
+      color: #0056b3;
+    }
+  }
+}
+
+.sticky-top {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}

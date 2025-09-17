@@ -1,0 +1,41 @@
+// Form component styles
+.form {
+  &__textarea {
+    &--no-resize {
+      resize: none;
+    }
+  }
+
+  &__input {
+    &--file {
+      cursor: pointer;
+    }
+  }
+
+  &__group {
+    margin-bottom: 1.5rem;
+  }
+
+  &__label {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+}
+
+.alert {
+  &--scrollable {
+    max-height: 150px;
+    overflow-y: auto;
+  }
+}
+
+// Specific form styles
+.thread-form {
+  &__textarea {
+    resize: none;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: 5px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+}

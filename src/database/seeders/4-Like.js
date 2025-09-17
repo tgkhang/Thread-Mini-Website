@@ -1,78 +1,82 @@
-'use strict';
+"use strict";
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
-    const items = [{
-      "userId": 1,
-      "threadId": 17
-    }, {
-      "userId": 15,
-      "threadId": 7
-    }, {
-      "userId": 6,
-      "threadId": 3
-    }, {
-      "userId": 19,
-      "threadId": 5
-    }, {
-      "userId": 16,
-      "threadId": 17
-    }, {
-      "userId": 9,
-      "threadId": 1
-    }, {
-      "userId": 16,
-      "threadId": 11
-    }, {
-      "userId": 19,
-      "threadId": 18
-    }, {
-      "userId": 8,
-      "threadId": 6
-    }, {
-      "userId": 17,
-      "threadId": 3
-    }, {
-      "userId": 12,
-      "threadId": 9
-    }, {
-      "userId": 9,
-      "threadId": 2
-    }, {
-      "userId": 7,
-      "threadId": 4
-    }, {
-      "userId": 5,
-      "threadId": 15
-    }, {
-      "userId": 9,
-      "threadId": 1
-    }, {
-      "userId": 6,
-      "threadId": 6
-    }, {
-      "userId": 1,
-      "threadId": 15
-    }, {
-      "userId": 9,
-      "threadId": 15
-    }, {
-      "userId": 19,
-      "threadId": 10
-    }, {
-      "userId": 5,
-      "threadId": 19
-    }]
-    ;
-    items.forEach(item => {
-      item.createdAt = Sequelize.literal('NOW()');
-      item.updatedAt = Sequelize.literal('NOW()');
+  async up(queryInterface, Sequelize) {
+    const items = [
+      {
+        userId: 1,
+        threadId: 11,
+      },
+      {
+        userId: 2,
+        threadId: 7,
+      },
+      {
+        userId: 6,
+        threadId: 3,
+      },
+      {
+        userId: 19,
+        threadId: 5,
+      },
+      {
+        userId: 6,
+        threadId: 7,
+      },
+      {
+        userId: 9,
+        threadId: 1,
+      },
+      {
+        userId: 6,
+        threadId: 11,
+      },
+      {
+        userId: 8,
+        threadId: 6,
+      },
+      {
+        userId: 17,
+        threadId: 3,
+      },
+      {
+        userId: 12,
+        threadId: 9,
+      },
+      {
+        userId: 9,
+        threadId: 2,
+      },
+      {
+        userId: 7,
+        threadId: 4,
+      },
+      {
+        userId: 5,
+        threadId: 15,
+      },
+      {
+        userId: 9,
+        threadId: 1,
+      },
+      {
+        userId: 6,
+        threadId: 6,
+      },
+      {
+        userId: 1,
+        threadId: 15,
+      },
+    ];
+    items.forEach((item) => {
+      item.createdAt = Sequelize.literal("NOW()");
+      item.updatedAt = Sequelize.literal("NOW()");
     });
-    await queryInterface.bulkInsert('Likes', items, {});
+    await queryInterface.bulkInsert("Likes", items, {});
   },
 
-  async down (queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('Likes', null, {});
-  }
+  async down(queryInterface, Sequelize) {
+    await queryInterface.bulkDelete("Likes", null, {});
+  },
 };

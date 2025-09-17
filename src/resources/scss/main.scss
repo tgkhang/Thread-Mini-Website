@@ -1,0 +1,21 @@
+// Variables
+@import 'variables';
+
+// Base styles
+@import 'base/layout';
+
+// Components
+@import 'components/avatar';
+@import 'components/buttons';
+@import 'components/navigation';
+@import 'components/thread';
+@import 'components/forms';
+
+// Pages
+@import 'pages/home';
+@import 'pages/profile';
+@import 'pages/auth';
+@import 'pages/search';
+
+// Legacy styles from app.scss (to be refactored)
+@import 'app';

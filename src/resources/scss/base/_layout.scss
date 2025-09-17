@@ -1,0 +1,39 @@
+// Base layout styles
+body {
+  margin-bottom: 60px; // Adjust for fixed footer
+}
+
+.container {
+  &--auth {
+    max-width: 500px;
+  }
+
+  &--main {
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+}
+
+.content {
+  &--centered {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+  }
+}
+
+// Responsive spacing
+.spacing {
+  &--sm { margin: 0.5rem; }
+  &--md { margin: 1rem; }
+  &--lg { margin: 2rem; }
+  &--xl { margin: 3rem; }
+}
+
+// Text utilities
+.text {
+  &--clickable {
+    cursor: pointer;
+  }
+}

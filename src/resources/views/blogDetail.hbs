@@ -48,8 +48,7 @@
                         <img
                             src="{{userImage}}"
                             alt="Avatar"
-                            class="rounded-circle"
-                            style="width: 50px; height: 50px; object-fit: cover;"
+                            class="avatar avatar--small-medium avatar--round avatar--clickable"
                             onclick="location.href='/{{userName}}'"
                         />
                     </div>
@@ -58,7 +57,7 @@
                     <div class="flex-grow-1">
                         <!-- User Info -->
                         <div class="d-flex justify-content-between align-items-center mb-2">
-                            <div onclick="location.href='/{{userName}}'" style="cursor: pointer;">
+                            <div onclick="location.href='/{{userName}}'" class="text--clickable">
                                 <h6 class="mb-0 fw-bold">{{userName}}</h6>
                                 <small class="text-muted">{{timeExpectation createdAt}}</small>
                             </div>

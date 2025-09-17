@@ -1,0 +1,30 @@
+// Navigation styles
+.nav-tabs {
+  .nav-link {
+    border-radius: 30px;
+    font-weight: bold;
+    padding: 12px 20px;
+    color: #6c757d;
+
+    &.active {
+      background-color: #6c757d;
+      color: #fff;
+      border-color: #6c757d;
+    }
+  }
+}
+
+.sticky-nav {
+  z-index: 1020;
+  top: 60px;
+  background-color: white;
+  border: none;
+}
+
+.bottom-nav {
+  z-index: 1030;
+}
+
+.tab-content {
+  padding-top: 20px;
+}

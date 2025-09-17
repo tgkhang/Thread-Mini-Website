@@ -22,6 +22,8 @@ RUN echo '#!/bin/sh' > /app/start.sh && \
     echo 'sleep 10' >> /app/start.sh && \
     echo 'echo "Setting up database..."' >> /app/start.sh && \
     echo 'cd /app/src/database && npx sequelize-cli db:migrate' >> /app/start.sh && \
+    echo 'echo "Seeding database..."' >> /app/start.sh && \
+    echo 'cd /app/src/database && npx sequelize-cli db:seed:all' >> /app/start.sh && \
     echo 'echo "Starting application..."' >> /app/start.sh && \
     echo 'cd /app && npm start' >> /app/start.sh && \
     chmod +x /app/start.sh
