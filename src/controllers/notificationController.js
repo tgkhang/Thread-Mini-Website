@@ -10,9 +10,17 @@ controller.showNotifications = async (req, res) => {
     res.locals.currentID = ID;
 
     const allNotifications = await models.Notification.findAll({
-      attributes: ["id", "userId", "text", "isSeen", "type", "createdAt",
+      attributes: [
+        "id",
+        "userId",
+        "text",
+        "isSeen",
+        "type",
+        "createdAt",
         [
-          sequelize.literal(`(SELECT "userName" FROM "Users" WHERE "Users"."id" = "Notification"."sourceId")`),
+          sequelize.literal(
+            `(SELECT "userName" FROM "Users" WHERE "Users"."id" = "Notification"."sourceId")`
+          ),
           "sourceUserName",
         ],
       ],
@@ -25,9 +33,17 @@ controller.showNotifications = async (req, res) => {
     res.locals.allNotifications = allNotifications;
 
     const seenNotifications = await models.Notification.findAll({
-      attributes: ["id", "userId", "text", "isSeen", "type", "createdAt",
+      attributes: [
+        "id",
+        "userId",
+        "text",
+        "isSeen",
+        "type",
+        "createdAt",
         [
-          sequelize.literal(`(SELECT "userName" FROM "Users" WHERE "Users"."id" = "Notification"."sourceId")`),
+          sequelize.literal(
+            `(SELECT "userName" FROM "Users" WHERE "Users"."id" = "Notification"."sourceId")`
+          ),
           "sourceUserName",
         ],
       ],
@@ -40,9 +56,17 @@ controller.showNotifications = async (req, res) => {
     res.locals.seenNotifications = seenNotifications;
 
     const unseenNotifications = await models.Notification.findAll({
-      attributes: ["id", "userId", "text", "isSeen", "type", "createdAt",
+      attributes: [
+        "id",
+        "userId",
+        "text",
+        "isSeen",
+        "type",
+        "createdAt",
         [
-          sequelize.literal(`(SELECT "userName" FROM "Users" WHERE "Users"."id" = "Notification"."sourceId")`),
+          sequelize.literal(
+            `(SELECT "userName" FROM "Users" WHERE "Users"."id" = "Notification"."sourceId")`
+          ),
           "sourceUserName",
         ],
       ],

@@ -6,50 +6,22 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 const cloudinary = require("cloudinary").v2;
-//handlebar
 const expressHandlebars = require("express-handlebars");
-//port
-const port = process.env.PORT || 3000;
-//morgan
 const morgan = require("morgan");
-//session
 const session = require("express-session");
+const models = require("./database/models");
+const { specs, swaggerUi } = require("./config/swagger");
 const {
   timeExpectation,
   formatDate,
   arrayInclude,
   eq,
 } = require("./controllers/handlebarsHelper");
-const models = require("./database/models");
-//redis
-// const {RedisStore} = require("connect-redis")
-// const {createClient}= require('redis');
-// let redisClient= createClient({
-//     //dotenv
-//     //url : process.env.REDIS_URL
-//     //internal link for server not run in local hosst any more
-//     //url:'redis://red-ctjb25ggph6c738fkohg:6379'
-
-//     //external link for local host
-//     //url:'rediss://red-ctjb25ggph6c738fkohg:0H1wNB1TP1C2yBJ7di2bLMfvHzUJJvDl@singapore-redis.render.com:6379'
-
-//     url: process.env.REDIS_URL
-// })
-// redisClient.connect().catch(console.error)
-
-//swagger documentation
-const { specs, swaggerUi } = require("./config/swagger");
-
-//passport
 const passport = require("./controllers/passport");
 const flash = require("connect-flash");
 
-// let redisStore = new RedisStore({
-//     client: redisClient,
-//     prefix: "myapp:",
-//   })
+const port = process.env.PORT || 3000;
 
-//static folder
 app.use(express.static(__dirname + "/public"));
 app.use(morgan("combined"));
 app.set("views", __dirname + "/resources/views");
@@ -74,13 +46,10 @@ app.engine(
 );
 
 app.set("view engine", "hbs");
-
-//cau hinh read post data form body
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 //session
-
 app.use(
   session({
     secret: process.env.SESSION_SECRET || "dev-secret-change-in-production",
@@ -104,8 +73,8 @@ app.use(flash());
 
 //middleware for session
 app.use(async (req, res, next) => {
-  console.log("Session ID:", req.session ? req.session.ID : null);
-  console.log("Is Authenticated:", req.isAuthenticated());
+  //console.log("Session ID:", req.session ? req.session.ID : null);
+  //console.log("Is Authenticated:", req.isAuthenticated());
   res.locals.isLoggedIn = req.isAuthenticated();
   res.locals.hasnoti = false;
   if (res.locals.isLoggedIn) {
@@ -119,19 +88,13 @@ app.use(async (req, res, next) => {
   }
   next();
 });
+
 // Cloudinary API
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
-
-// app.get("/createTable", (req, res) => {
-//     let models = require("./database/models");
-//     models.sequelize.sync().then(() => {
-//         res.send("tables created");
-//     });
-// });
 
 // Health check endpoint for development
 app.get("/health", (req, res) => {
@@ -153,13 +116,13 @@ app.use(
   })
 );
 
-app.use("/", require("./routes/authRouter")); /// xác thực rồi mới xử lí user router
+app.use("/", require("./routes/authRouter"));
 app.use("/", require("./routes/indexRouter"));
 
 app.use((req, res, next) => {
   res.status(404).render("error", { message: "FILE NOT FOUND" });
 });
-//
+
 app.use((error, req, res, next) => {
   console.log(error);
   res.status(500).render("error", { message: "Internal Server Error" });
@@ -169,6 +132,3 @@ app.use((error, req, res, next) => {
 app.listen(port, () => {
   console.log(`server is running on port ${port}`);
 });
-
-// const path = require("path");
-// const { createPagination } = require("express-handlebars-paginate");

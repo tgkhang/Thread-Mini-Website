@@ -12,10 +12,6 @@ const { JSDOM } = require("jsdom");
 const window = new JSDOM("").window;
 const purify = DOMPurify(window);
 
-controller.showCreateThreadpage = async (req, res) => {
-  res.render("createThread");
-};
-
 controller.showCreateThread = async (req, res) => {
   let ID = req.user.id;
   res.locals.currentID = ID;

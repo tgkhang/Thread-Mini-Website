@@ -1,100 +1,148 @@
 {{>header}}
-<main class="col-md-5 d-flex flex-column align-items-center pt-5 mt-5 container">
-    <h1 class="fs-1 mt-4 text-center">Edit Profile</h1>
+<main
+  class="col-md-5 d-flex flex-column align-items-center pt-5 mt-5 container"
+>
+  <h1 class="fs-1 mt-4 text-center">Edit Profile</h1>
 
-    {{#if done}}
-    <p class="fs-4 text-center text-muted mt-3 mb-4">Your profile is updated</p>
-    <div class="mb-4">
-        <i class="bi bi-check-circle-fill display-4 text-success"></i>
-    </div>
-    <a class="btn btn-outline-dark w-100 py-2 rounded-pill" href="/profile">Back To Profile</a>
-    {{else}}
+  {{#if done}}
+  <p class="fs-4 text-center text-muted mt-3 mb-4">Your profile is updated</p>
+  <div class="mb-4">
+    <i class="bi bi-check-circle-fill display-4 text-success"></i>
+  </div>
+  <a class="btn btn-outline-dark w-100 py-2 rounded-pill" href="/profile"
+    >Back To Profile</a
+  >
+  {{else}}
 
   <!-- Update Profile Form -->
-    <div class="container col-md-10 my-4">
-    <form action="/updateProfile" method="post" class="p-4 rounded shadow-sm bg-light" enctype="multipart/form-data">
-        
-        <div class="mb-3">
-            <label for="image" class="form-label">Change Avatar</label>
-            <input type="file" name="image" id="image" accept="image/*" class="form-control">
-        </div>
-        <div class="mb-3">
-            <label for="firstName" class="form-label text-secondary">First Name</label>
-            <input type="text" class="form-control border border-secondary rounded-pill" id="firstName" name="firstName" value="{{userInfo.firstName}}" required>
-        </div>
+  <div class="container col-md-10 my-4">
+    <form
+      action="/updateProfile"
+      method="post"
+      class="p-4 rounded shadow-sm bg-light"
+      enctype="multipart/form-data"
+    >
+      <div class="mb-3">
+        <label for="image" class="form-label">Change Avatar</label>
+        <input
+          type="file"
+          name="image"
+          id="image"
+          accept="image/*"
+          class="form-control"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="firstName" class="form-label text-secondary"
+          >First Name</label
+        >
+        <input
+          type="text"
+          class="form-control border border-secondary rounded-pill"
+          id="firstName"
+          name="firstName"
+          value="{{userInfo.firstName}}"
+          required
+        />
+      </div>
 
-        <div class="mb-3">
-            <label for="lastName" class="form-label text-secondary">Last Name</label>
-            <input type="text" class="form-control border border-secondary rounded-pill" id="lastName" name="lastName" value="{{userInfo.lastName}}" required>
-        </div>
+      <div class="mb-3">
+        <label for="lastName" class="form-label text-secondary"
+          >Last Name</label
+        >
+        <input
+          type="text"
+          class="form-control border border-secondary rounded-pill"
+          id="lastName"
+          name="lastName"
+          value="{{userInfo.lastName}}"
+          required
+        />
+      </div>
 
-        <div class="mb-3">
-            <label for="userName" class="form-label text-secondary">Username</label>
-            <input type="text" class="form-control border border-secondary rounded-pill" id="userName" name="userName" value="{{userInfo.userName}}" required>
-        </div>
+      <div class="mb-3">
+        <label for="userName" class="form-label text-secondary">Username</label>
+        <input
+          type="text"
+          class="form-control border border-secondary rounded-pill"
+          id="userName"
+          name="userName"
+          value="{{userInfo.userName}}"
+          required
+        />
+      </div>
 
-        <div class="mb-3">
-            <label for="bio" class="form-label text-secondary">Bio</label>
-            <textarea class="form-control border border-secondary rounded" id="bio" name="bio" rows="10" placeholder="Tell us something about you...">{{userInfo.bio}}</textarea>
-        </div>
+      <div class="mb-3">
+        <label for="bio" class="form-label text-secondary">Bio</label>
+        <textarea
+          class="form-control border border-secondary rounded"
+          id="bio"
+          name="bio"
+          rows="10"
+          placeholder="Tell us something about you..."
+        >
+{{userInfo.bio}}</textarea
+        >
+      </div>
 
-        <div class="text-center">
-            <button type="submit" class="btn btn-outline-dark w-100 py-2 rounded-pill">Save Changes</button>
-        </div>
+      <div class="text-center">
+        <button
+          type="submit"
+          class="btn btn-outline-dark w-100 py-2 rounded-pill"
+        >
+          Save Changes
+        </button>
+      </div>
     </form>
-    </div>
-    {{/if}}
-
-    {{#if error}}
-        <div class="alert alert-danger text-center" role="alert">
-            {{error}}
-        </div>
-    {{/if}}
+  </div>
+  {{/if}} {{#if error}}
+  <div class="alert alert-danger text-center" role="alert">{{error}}</div>
+  {{/if}}
 </main>
 
 {{>navBar}}
 
 <!-- Custom Styles -->
 <style>
-    /* Form Styles */
+  /* Form Styles */
+  .form-control {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    color: #495057;
+  }
+
+  .form-control:focus {
+    box-shadow: none;
+    border-color: #adb5bd;
+  }
+
+  .btn-outline-dark {
+    border-radius: 50px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  .btn-outline-dark:hover {
+    background-color: #6c757d;
+    color: white;
+  }
+
+  /* Form Container */
+  .bg-light {
+    background-color: #f8f9fa !important;
+  }
+
+  h5 {
+    color: #6c757d;
+  }
+
+  /* Responsiveness */
+  @media (max-width: 768px) {
+    main {
+      padding: 0 10px;
+    }
+
     .form-control {
-        background-color: #f8f9fa;
-        border: 1px solid #dee2e6;
-        color: #495057;
+      max-width: 100%;
     }
-
-    .form-control:focus {
-        box-shadow: none;
-        border-color: #adb5bd;
-    }
-
-    .btn-outline-dark {
-        border-radius: 50px;
-        transition: background-color 0.3s ease, color 0.3s ease;
-    }
-
-    .btn-outline-dark:hover {
-        background-color: #6c757d;
-        color: white;
-    }
-
-    /* Form Container */
-    .bg-light {
-        background-color: #f8f9fa !important;
-    }
-
-    h5 {
-        color: #6c757d;
-    }
-
-    /* Responsiveness */
-    @media (max-width: 768px) {
-        main {
-            padding: 0 10px;
-        }
-
-        .form-control {
-            max-width: 100%;
-        }
-    }
+  }
 </style>

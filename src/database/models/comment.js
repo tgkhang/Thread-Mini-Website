@@ -1,5 +1,5 @@
-'use strict';
-const { Model } = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
   class Comment extends Model {
@@ -11,14 +11,14 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // belongs to one Thread
       Comment.belongsTo(models.Thread, {
-        foreignKey: 'threadId',
-        as: 'thread',
+        foreignKey: "threadId",
+        as: "thread",
       });
 
       //  belongs to one User
       Comment.belongsTo(models.User, {
-        foreignKey: 'userId',
-        as: 'user',
+        foreignKey: "userId",
+        as: "user",
       });
     }
   }
@@ -27,30 +27,30 @@ module.exports = (sequelize, DataTypes) => {
     {
       text: {
         type: DataTypes.TEXT,
-        allowNull: false, 
+        allowNull: false,
       },
       threadId: {
         type: DataTypes.INTEGER,
-        allowNull: false, 
+        allowNull: false,
         references: {
-          model: 'Threads',
-          key: 'id', 
+          model: "Threads",
+          key: "id",
         },
-        onDelete: 'CASCADE', 
+        onDelete: "CASCADE",
       },
       userId: {
         type: DataTypes.INTEGER,
-        allowNull: false, 
+        allowNull: false,
         references: {
-          model: 'Users', 
-          key: 'id',
+          model: "Users",
+          key: "id",
         },
-        onDelete: 'CASCADE',
+        onDelete: "CASCADE",
       },
     },
     {
       sequelize,
-      modelName: 'Comment',
+      modelName: "Comment",
     }
   );
 

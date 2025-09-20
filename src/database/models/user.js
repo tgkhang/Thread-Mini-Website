@@ -3,8 +3,14 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
-      User.hasMany(models.Follow, { foreignKey: 'followerId', as: 'followers' });
-      User.hasMany(models.Follow, { foreignKey: 'followingId', as: 'followings' });
+      User.hasMany(models.Follow, {
+        foreignKey: "followerId",
+        as: "followers",
+      });
+      User.hasMany(models.Follow, {
+        foreignKey: "followingId",
+        as: "followings",
+      });
     }
   }
   User.init(
@@ -40,7 +46,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       imagePath: {
         type: DataTypes.STRING,
-        allowNull: true, 
+        allowNull: true,
         validate: {
           isUrl: true,
         },

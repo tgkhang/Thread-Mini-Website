@@ -90,6 +90,7 @@ router.get("/search", controller.showSearchpage);
  *               type: string
  */
 router.get("/searchResult", controller.showSearchResult);
+
 /**
  * @swagger
  * /profile:
@@ -170,6 +171,7 @@ router.post("/followUser", userController.toggleFollow);
  *               type: string
  */
 router.get("/editProfile", userController.showEditProfile);
+
 /**
  * @swagger
  * /createThread:
@@ -227,7 +229,11 @@ router.get("/createThread", threadController.showCreateThread);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.post("/createThread", upload.single("image"), threadController.createThread);
+router.post(
+  "/createThread",
+  upload.single("image"),
+  threadController.createThread
+);
 
 /**
  * @swagger
@@ -340,37 +346,6 @@ router.post(
 
 /**
  * @swagger
- * /unfollow:
- *   delete:
- *     summary: Unfollow a user
- *     tags: [Social]
- *     security:
- *       - sessionAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - userName
- *             properties:
- *               userName:
- *                 type: string
- *                 description: Username to unfollow
- *                 example: "testuser2"
- *     responses:
- *       200:
- *         description: User unfollowed successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Success'
- */
-router.delete("/unfollow", userController.unfollowUser);
-
-/**
- * @swagger
  * /load-more:
  *   get:
  *     summary: Load more threads (pagination)
@@ -444,6 +419,7 @@ router.get("/load-more", controller.loadMoreBlogs);
  *                   type: integer
  */
 router.post("/likeThread", threadController.likeThread);
+
 /**
  * @swagger
  * /notifications:
@@ -492,6 +468,7 @@ router.get("/notifications", notificationController.showNotifications);
  *               $ref: '#/components/schemas/Success'
  */
 router.post("/notifications", notificationController.seenhandle);
+
 /**
  * @swagger
  * /{page}/{thread}:
@@ -525,7 +502,7 @@ router.post("/notifications", notificationController.seenhandle);
  *       404:
  *         description: Page or thread not found
  */
-router.get("/:page/:thread?", controller.show);
+router.get("/:page/:thread?", controller.showUserProfileOrThreadDetail);
 
 /**
  * @swagger

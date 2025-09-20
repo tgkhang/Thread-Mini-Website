@@ -1,1 +1,55 @@
-fadsfa
+Same data: mno456pqr789stu012
+
+In Redis: Used as part of the key "myapp:sess:mno456pqr789stu012"
+In Browser: Sent as the session ID in the cookie connect.sid=s%3Amno456pqr789stu012
+
+Process:
+
+Browser sends cookie with session ID: mno456pqr789stu012
+Express extracts this ID from the cookie
+Express looks up "myapp:sess:mno456pqr789stu012" in Redis
+Redis returns the session data showing user ID is 7
+Your app now knows this request is from user ID 7
+
+
+example redis storage:
+Key: "myapp:sess:abc123def456ghi789"
+Value: {
+  "cookie": {
+    "httpOnly": true,
+    "maxAge": 1200000,
+    "expires": "2025-09-20T15:30:00.000Z"
+  },
+  "passport": {
+    "user": 15
+  },
+  "flash": {}
+}
+
+Key: "myapp:sess:xyz987uvw654rst321"
+Value: {
+  "cookie": {
+    "httpOnly": true,
+    "maxAge": 1200000,
+    "expires": "2025-09-20T15:32:00.000Z"
+  },
+  "passport": {
+    "user": 42
+  },
+  "flash": {
+    "success": ["Login successful"]
+  }
+}
+
+Key: "myapp:sess:mno456pqr789stu012"
+Value: {
+  "cookie": {
+    "httpOnly": true,
+    "maxAge": 1200000,
+    "expires": "2025-09-20T15:28:00.000Z"
+  },
+  "passport": {
+    "user": 7
+  },
+  "flash": {}
+}

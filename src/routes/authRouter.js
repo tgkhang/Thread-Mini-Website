@@ -15,6 +15,22 @@ const { body, getErrorMessage } = require("../controllers/validator");
 
 /**
  * @swagger
+ * /start:
+ *   get:
+ *     summary: Show start/welcome page
+ *     tags: [Authentication]
+ *     responses:
+ *       200:
+ *         description: Start page rendered successfully
+ *         content:
+ *           text/html:
+ *             schema:
+ *               type: string
+ */
+router.get("/start", controller.showStartPage);
+
+/**
+ * @swagger
  * /:
  *   get:
  *     summary: Root endpoint - redirects based on authentication status
@@ -33,25 +49,8 @@ router.get("/", (req, res) => {
   if (!req.isAuthenticated()) {
     return res.redirect("/start");
   }
-
   res.redirect("/home");
 });
-
-/**
- * @swagger
- * /start:
- *   get:
- *     summary: Show start/welcome page
- *     tags: [Authentication]
- *     responses:
- *       200:
- *         description: Start page rendered successfully
- *         content:
- *           text/html:
- *             schema:
- *               type: string
- */
-router.get("/start", controller.start);
 
 /**
  * @swagger
@@ -67,7 +66,7 @@ router.get("/start", controller.start);
  *             schema:
  *               type: string
  */
-router.get("/login", controller.show);
+router.get("/login", controller.showLoginPage);
 
 /**
  * @swagger
@@ -118,8 +117,7 @@ router.get("/login", controller.show);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.post(
-  "/login",
+router.post("/login",
   body("username").trim().notEmpty().withMessage("Username is required"),
   body("password").trim().notEmpty().withMessage("Password is required"),
   (req, res, next) => {
@@ -168,7 +166,7 @@ router.post("/logout", controller.logout);
  *             schema:
  *               type: string
  */
-router.get("/registerEmail", controller.showRegisterEmail);
+router.get("/registerEmail", controller.showSignUpWithEmail);
 
 /**
  * @swagger
@@ -211,8 +209,7 @@ router.get("/registerEmail", controller.showRegisterEmail);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.post(
-  "/registerEmail",
+router.post("/registerEmail",
   body("username")
     .trim()
     .notEmpty()
@@ -341,8 +338,7 @@ router.get("/register", controller.tokenRegister);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.post(
-  "/register",
+router.post("/register",
   body("firstName").trim().notEmpty().withMessage("First name is required!"),
   body("lastName").trim().notEmpty().withMessage("Last name is required!"),
   body("username").trim().notEmpty().withMessage("Username is required"),
@@ -430,8 +426,7 @@ router.get("/forgot", controller.showForgotPassword);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.post(
-  "/forgot",
+router.post("/forgot",
   body("email")
     .trim()
     .notEmpty()
@@ -519,8 +514,7 @@ router.get("/reset", controller.showResetPassword);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.post(
-  "/reset",
+router.post("/reset",
   body("email")
     .trim()
     .notEmpty()

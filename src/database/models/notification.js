@@ -1,5 +1,5 @@
-'use strict';
-const { Model } = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
   class Notification extends Model {
@@ -9,16 +9,14 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      
       Notification.belongsTo(models.User, {
-        foreignKey: 'sourceId',
-        as: 'sourceUser',
+        foreignKey: "sourceId",
+        as: "sourceUser",
       });
 
-      
       Notification.belongsTo(models.User, {
-        foreignKey: 'userId',
-        as: 'recipientUser',
+        foreignKey: "userId",
+        as: "recipientUser",
       });
     }
   }
@@ -33,33 +31,33 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: 'Users',
-          key: 'id',
+          model: "Users",
+          key: "id",
         },
-        onDelete: 'CASCADE',
+        onDelete: "CASCADE",
       },
       userId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: 'Users', 
-          key: 'id',
+          model: "Users",
+          key: "id",
         },
-        onDelete: 'CASCADE',
+        onDelete: "CASCADE",
       },
       isSeen: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
       type: {
-        type: DataTypes.ENUM('LIKE', 'FOLLOW', 'COMMENT'), 
+        type: DataTypes.ENUM("LIKE", "FOLLOW", "COMMENT"),
         allowNull: false,
       },
     },
     {
       sequelize,
-      modelName: 'Notification',
-      tableName: 'Notifications',
+      modelName: "Notification",
+      tableName: "Notifications",
     }
   );
 

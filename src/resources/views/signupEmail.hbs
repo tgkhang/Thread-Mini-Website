@@ -1,83 +1,80 @@
 {{>header}}
 <main class="d-flex flex-column align-items-center pt-5 mt-5">
-    <p class="fs-1 mt-5">Sign Up</p>
-    <i class="bi bi-threads display-3 mt-3 mb-4"></i>
-    {{#if done}}
-    <p class="fs-4 text-center text-success mt-3 mb-4">
-        An email has been sent. Please check your email box to verify your account
-    </p>
-    {{else}}
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-10 col-md-8 col-lg-6">
-                <form action="/registerEmail" method="post" id="formRegister">
+  <p class="fs-1 mt-5">Sign Up</p>
+  <i class="bi bi-threads display-3 mt-3 mb-4"></i>
+  {{#if done}}
+  <p class="fs-4 text-center text-success mt-3 mb-4">
+    An email has been sent. Please check your email box to verify your account
+  </p>
+  {{else}}
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-10 col-md-8 col-lg-6">
+        <form action="/registerEmail" method="post" id="formRegister">
+          <!-- Email -->
+          <div class="form-floating mb-3">
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              name="email"
+              placeholder="Enter your email address"
+              pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$"
+              required
+            />
+            <label for="email">Email</label>
+          </div>
 
+          <div class="form-floating mb-3">
+            <input
+              type="text"
+              class="form-control"
+              id="username"
+              name="username"
+              placeholder="Enter your username"
+              required
+            />
+            <label for="username">Username</label>
+          </div>
 
-                    <!-- Email -->
-                    <div class="form-floating mb-3">
-                        <input
-                            type="email"
-                            class="form-control"
-                            id="email"
-                            name="email"
-                            placeholder="Enter your email address"
-                            pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$"
-                            required
-                        />
-                        <label for="email">Email</label>
-                    </div>
+          <!-- Terms and Conditions Checkbox -->
+          <div class="mb-3 form-check">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              id="terms"
+              required
+            />
+            <label class="form-check-label" for="terms">
+              I agree to the
+              <a href="/terms" target="_blank">Terms and Conditions</a>
+            </label>
+          </div>
 
-                    <div class="form-floating mb-3">
-                        <input
-                            type="text"
-                            class="form-control"
-                            id="username"
-                            name="username"
-                            placeholder="Enter your username"
-                            required
-                        />
-                        <label for="username">Username</label>
-                    </div>
+          <!-- Submit Button -->
+          <div class="d-grid">
+            <button type="submit" class="btn btn-primary">Sign Up</button>
+          </div>
+          <!-- Register Message -->
+          {{#if registerMessage}}
+          <div
+            class="alert alert-warning mt-3 w-100 text-break alert--scrollable"
+          >
+            {{{registerMessage}}}
+          </div>
+          {{/if}}
+          <input type="hidden" name="reqUrl" value="{{reqUrl}}" />
+          {{#if message}}
+          <div class="alert alert-warning mt-3">{{{message}}}</div>
+          {{/if}}
+        </form>
 
-                    <!-- Terms and Conditions Checkbox -->
-                    <div class="mb-3 form-check">
-                        <input
-                            type="checkbox"
-                            class="form-check-input"
-                            id="terms"
-                            required
-                        />
-                        <label class="form-check-label" for="terms">
-                            I agree to the <a href="/terms" target="_blank">Terms and Conditions</a>
-                        </label>
-                    </div>
-
-                    <!-- Submit Button -->
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-primary">Sign Up</button>
-                    </div>
-                    <!-- Register Message -->
-                    {{#if registerMessage}}
-                    <div
-                        class="alert alert-warning mt-3 w-100 text-break alert--scrollable"
-                    >
-                        {{{registerMessage}}}
-                    </div>
-                    {{/if}}
-                    <input type="hidden" name="reqUrl" value="{{reqUrl}}">
-                    {{#if message}}
-                    <div class="alert alert-warning mt-3">
-                        {{{message}}}
-                    </div>
-                    {{/if}}
-                </form>
-
-                <!-- Login Link -->
-                <div class="mt-4 text-center">
-                    <p>Already have an account? <a href="/login">Login here</a></p>
-                </div>
-            </div>
+        <!-- Login Link -->
+        <div class="mt-4 text-center">
+          <p>Already have an account? <a href="/login">Login here</a></p>
         </div>
+      </div>
     </div>
-    {{/if}}
+  </div>
+  {{/if}}
 </main>

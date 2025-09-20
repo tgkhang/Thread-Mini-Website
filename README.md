@@ -80,6 +80,8 @@ Test with these seeded accounts:
 | hfayer0     | dN5&Ez\|%t(\`! | Test User 1 |
 | bmunt1      | sY2<@jTV       | Test User 2 |
 | dproudlock2 | gC6$#\`Py(\\Z7 | Test User 3 |
+| gband3      | kJ0~HipGKlL,C5xA | Test User 4 |
+| diacobucci4 | vL8?Gn0'{b.%d# | Test User 5 |
 
 ## ⚙️ Configuration
 
@@ -141,13 +143,19 @@ npm run build:css:prod # Compile SCSS with compression
 ### Database Operations
 
 ```bash
-# Run migrations
+# Run migrations (from project root)
+npx sequelize-cli db:migrate --config src/database/config/config.json --migrations-path src/database/migrations
+
+# Seed database (from project root)
+npx sequelize-cli db:seed:all --config src/database/config/config.json --seeders-path src/database/seeders
+
+# Undo all seeds (from project root)
+npx sequelize-cli db:seed:undo:all --config src/database/config/config.json --seeders-path src/database/seeders
+
+# Or run from src/database directory
+cd src/database
 npx sequelize-cli db:migrate
-
-# Seed database
 npx sequelize-cli db:seed:all
-
-# Undo all seeds
 npx sequelize-cli db:seed:undo:all
 ```
 
@@ -157,10 +165,17 @@ npx sequelize-cli db:seed:undo:all
 - **Models** (`src/database/models/`): Sequelize models for User, Thread, Comment, Like, Follow, Notification
 - **Controllers** (`src/controllers/`):
   - `authController.js` - Authentication logic
-  - `indexController.js` - Main application logic
+  - `indexController.js` - Main application logic (legacy, large file)
+  - `userController.js` - User-related operations
+  - `threadController.js` - Thread management
+  - `commentController.js` - Comment handling
+  - `notificationController.js` - Notification system
   - `image.js` - Cloudinary image handling
   - `passport.js` - Passport.js configuration
   - `validator.js` - Input validation utilities
+  - `handlebarsHelper.js` - Template helpers
+  - `mail.js` - Email functionality
+  - `jwt.js` - JWT token handling
 - **Views** (`src/resources/views/`): Handlebars templates with layouts and partials
 - **Routes** (`src/routes/`): Express routing separated by functionality
 
@@ -220,15 +235,23 @@ Three-service architecture with health checks and persistent volumes:
 src/
 ├── controllers/          # Application logic and utilities
 │   ├── authController.js     # Authentication handling
-│   ├── indexController.js    # Main app features (large file)
+│   ├── indexController.js    # Legacy main app features (large file)
+│   ├── userController.js     # User management
+│   ├── threadController.js   # Thread operations
+│   ├── commentController.js  # Comment handling
+│   ├── notificationController.js # Notification system
 │   ├── image.js             # Cloudinary integration
 │   ├── passport.js          # Passport.js configuration
 │   ├── validator.js         # Input validation
-│   └── handlebarsHelper.js  # Template helpers
+│   ├── handlebarsHelper.js  # Template helpers
+│   ├── mail.js             # Email functionality
+│   └── jwt.js              # JWT token handling
 ├── database/            # Database layer
 │   ├── models/             # Sequelize models
 │   ├── migrations/         # Database migrations
-│   └── seeders/           # Test data seeders
+│   ├── seeders/           # Test data seeders
+│   ├── config/            # Database configuration
+│   └── db.js              # Database connection
 ├── routes/              # Express routing
 │   ├── authRouter.js       # Authentication routes
 │   └── indexRouter.js      # Main application routes
@@ -237,7 +260,10 @@ src/
 │   └── scss/              # SCSS stylesheets
 ├── public/              # Static assets
 ├── config/              # Configuration files
-└── app.js              # Main application entry point
+│   └── swagger.js          # API documentation config
+├── uploads/             # File upload directory
+├── app.js               # Main application entry point
+└── app2.js              # Alternative application entry point
 ```
 
 ## 🚀 Manual Setup (Without Docker)
@@ -263,7 +289,6 @@ src/
 
 3. **Setup database**
    ```bash
-   cd src/database
    npx sequelize-cli db:migrate
    npx sequelize-cli db:seed:all
    ```
@@ -277,7 +302,7 @@ src/
 
 ## 📝 API Documentation
 
-Swagger API documentation is available when running the application. The configuration is located in `src/config/swagger.js`.
+Swagger API documentation is available when running the application at `/api-docs`. The configuration is located in `src/config/swagger.js` with comprehensive schemas for User, Thread, Comment, and Notification entities.
 
 ## 🧪 Testing
 

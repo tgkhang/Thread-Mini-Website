@@ -183,14 +183,22 @@ controller.updateProfile = async (req, res) => {
 
       if (existingUser) {
         const userInfo = await models.User.findOne({
-          attributes: ["id", "firstName", "lastName", "bio", "userName", "imagePath"],
+          attributes: [
+            "id",
+            "firstName",
+            "lastName",
+            "bio",
+            "userName",
+            "imagePath",
+          ],
           where: { id: ID },
           raw: true,
         });
 
         return res.status(400).render("editProfile", {
           done: false,
-          error: "The username is already taken. Please choose a different one.",
+          error:
+            "The username is already taken. Please choose a different one.",
           userInfo,
         });
       }
@@ -198,14 +206,22 @@ controller.updateProfile = async (req, res) => {
       console.error("Error checking unique username:", error);
 
       const userInfo = await models.User.findOne({
-        attributes: ["id", "firstName", "lastName", "bio", "userName", "imagePath"],
+        attributes: [
+          "id",
+          "firstName",
+          "lastName",
+          "bio",
+          "userName",
+          "imagePath",
+        ],
         where: { id: ID },
         raw: true,
       });
 
       return res.status(500).render("editProfile", {
         done: false,
-        error: "An error occurred while validating your username. Please try again.",
+        error:
+          "An error occurred while validating your username. Please try again.",
         userInfo,
       });
     }
@@ -227,7 +243,14 @@ controller.updateProfile = async (req, res) => {
       }
 
       const userInfo = await models.User.findOne({
-        attributes: ["id", "firstName", "lastName", "bio", "userName", "imagePath"],
+        attributes: [
+          "id",
+          "firstName",
+          "lastName",
+          "bio",
+          "userName",
+          "imagePath",
+        ],
         where: { id: ID },
         raw: true,
       });
@@ -249,7 +272,14 @@ controller.updateProfile = async (req, res) => {
     await models.User.update(updatedFields, { where: { id: ID } });
 
     const updatedUserInfo = await models.User.findOne({
-      attributes: ["id", "firstName", "lastName", "bio", "userName", "imagePath"],
+      attributes: [
+        "id",
+        "firstName",
+        "lastName",
+        "bio",
+        "userName",
+        "imagePath",
+      ],
       where: { id: ID },
       raw: true,
     });
@@ -262,7 +292,14 @@ controller.updateProfile = async (req, res) => {
     console.error("Database update failed:", error);
 
     const userInfo = await models.User.findOne({
-      attributes: ["id", "firstName", "lastName", "bio", "userName", "imagePath"],
+      attributes: [
+        "id",
+        "firstName",
+        "lastName",
+        "bio",
+        "userName",
+        "imagePath",
+      ],
       where: { id: ID },
       raw: true,
     });
@@ -330,42 +367,6 @@ controller.toggleFollow = async (req, res) => {
   } catch (error) {
     console.error("Error handling follow action:", error);
     res.status(500).json({ error: "Internal server error" });
-  }
-};
-
-controller.unfollowUser = async (req, res) => {
-  let ID1 = req.user.id;
-  let ID2 = isNaN(req.query.id) ? 0 : parseInt(req.query.id);
-
-  if (ID1 != ID2) {
-    try {
-      await models.Follow.destroy({
-        where: {
-          followerId: ID1,
-          followingId: ID2,
-        },
-      });
-    } catch (error) {
-      console.error(error);
-      res.status(500).send("Can not unfollow!");
-    }
-  }
-};
-
-controller.followUser = async (req, res) => {
-  let ID1 = req.user.id;
-  let ID2 = isNaN(req.query.id) ? 0 : parseInt(req.query.id);
-
-  if (ID1 != ID2) {
-    try {
-      await models.Follow.create({
-        followerId: ID1,
-        followingId: ID2,
-      });
-    } catch (error) {
-      console.error(error);
-      res.status(500).send("Can not follow!");
-    }
   }
 };
 
